@@ -36,6 +36,9 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
             return;
         }
     }    
+    fseek(*StringPointer1, 0, SEEK_SET);
+    fseek(*DataPointer1, 0, SEEK_SET);
+    fseek(*ParsePointer1, 0, SEEK_SET);
     while (fgets(buffer, sizeof(buffer),*DataPointer1)!=NULL)
     {
         WhileCounter=0;
@@ -60,12 +63,26 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     free(CombainedValues);
 }
 
+void v2(){
+}
+
+void v3(){ 
+}
+
 void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     int NumberOfFunction;
     scanf("%d",&NumberOfFunction);
     if (NumberOfFunction==1)
     {
         v1(DataPointer1,ParsePointer1,StringPointer1);
+    }else if (NumberOfFunction==2)
+    {
+        v2(DataPointer1,ParsePointer1,StringPointer1);
+    }else if (NumberOfFunction==2)
+    {
+        v3(DataPointer1,ParsePointer1,StringPointer1);
+    }else{
+        printf("V: Nesprávne volba vypisu.\n");
     }
 }
 
@@ -85,7 +102,6 @@ int main(void)
         if (CalledFunction=='v')
         {
             v(DataPointer1,ParsePointer1,StringPointer1);
-            break;
         }
     }
     return 0;
