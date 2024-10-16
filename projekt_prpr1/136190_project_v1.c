@@ -69,6 +69,14 @@ void v2(){
 void v3(){ 
 }
 
+void h(FILE **StringPointer1){
+    if (*StringPointer1==NULL)
+    {
+        printf("H: File not opened.");
+    }
+    
+}
+
 void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     int NumberOfFunction;
     scanf("%d",&NumberOfFunction);
@@ -102,7 +110,12 @@ int main(void)
         if (CalledFunction=='v')
         {
             v(DataPointer1,ParsePointer1,StringPointer1);
+        } else if (CalledFunction=='h')
+        {
+            h(StringPointer1);
         }
+        
+        
     }
     return 0;
 }
