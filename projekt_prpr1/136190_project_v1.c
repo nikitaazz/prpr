@@ -70,11 +70,39 @@ void v3(){
 }
 
 void h(FILE **StringPointer1){
+    char Symbol;
+    int LetterCountLowerCase[26]={0},LetterCountUpperCase[26]={0},NumberCounter[10]={0},i = 0;;
     if (*StringPointer1==NULL)
     {
         printf("H: File not opened.");
     }
-    
+    while ((Symbol = fgetc(*StringPointer1)) != EOF)
+    {
+        if (Symbol >= '0' && Symbol <= '9')
+        {
+            NumberCounter[Symbol - '0']++;
+        }
+        else if (Symbol >= 'A' && Symbol <= 'Z')
+        {
+            LetterCountUpperCase[Symbol - 'A']++;
+        }
+        else if (Symbol >= 'a' && Symbol <= 'z')
+        {
+            LetterCountUpperCase[Symbol - 'a']++;
+        }
+    }
+
+    for (i = 0; i < 26; i++) {
+        if (LetterCountUpperCase[i] > 0) {
+            printf("%c : %d\n", i+65, LetterCountUpperCase[i]);
+        }
+        if (LetterCountLowerCase[i] > 0) {
+            printf("%c : %d\n", i+97, LetterCountLowerCase[i]);
+        }
+        if (NumberCounter[i] > 0) {
+            printf("%d : %d\n", i, NumberCounter[i]);
+        }
+    }
 }
 
 void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
