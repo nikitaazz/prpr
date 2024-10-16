@@ -71,10 +71,12 @@ void v3(){
 
 void h(FILE **StringPointer1){
     char Symbol;
-    int LetterCountLowerCase[26]={0},LetterCountUpperCase[26]={0},NumberCounter[10]={0},i = 0;;
+    int LetterCountLowerCase[26]={0},LetterCountUpperCase[26]={0},NumberCounter[10]={0},i = 0;
+    fseek(*StringPointer1, 0, SEEK_SET);
     if (*StringPointer1==NULL)
     {
-        printf("H: File not opened.");
+        printf("H: File not opened.\n");
+        return;
     }
     while ((Symbol = fgetc(*StringPointer1)) != EOF)
     {
@@ -88,19 +90,22 @@ void h(FILE **StringPointer1){
         }
         else if (Symbol >= 'a' && Symbol <= 'z')
         {
-            LetterCountUpperCase[Symbol - 'a']++;
+            LetterCountLowerCase[Symbol - 'a']++;
         }
     }
-
     for (i = 0; i < 26; i++) {
         if (LetterCountUpperCase[i] > 0) {
-            printf("%c : %d\n", i+65, LetterCountUpperCase[i]);
+            printf("%c : %d\n", i + 'A', LetterCountUpperCase[i]);
         }
+    }
+    for (i = 0; i < 26; i++) {
         if (LetterCountLowerCase[i] > 0) {
-            printf("%c : %d\n", i+97, LetterCountLowerCase[i]);
+            printf("%c : %d\n", i + 'a', LetterCountLowerCase[i]);
         }
+    }
+    for (i = 0; i < 10; i++) {
         if (NumberCounter[i] > 0) {
-            printf("%d : %d\n", i, NumberCounter[i]);
+        printf("%d : %d\n", i, NumberCounter[i]);
         }
     }
 }
