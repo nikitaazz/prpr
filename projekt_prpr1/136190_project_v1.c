@@ -123,7 +123,7 @@ void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     {
         v3(DataPointer1,ParsePointer1,StringPointer1);
     }else{
-        printf("V: Nesprávne volba vypisu.\n");
+        printf("V: Incorrect display option.\n");
     }
 }
 
