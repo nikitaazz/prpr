@@ -147,8 +147,6 @@ int main(void)
         {
             h(StringPointer1);
         }
-        
-        
     }
     return 0;
 }
