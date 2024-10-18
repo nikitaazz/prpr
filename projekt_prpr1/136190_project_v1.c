@@ -63,12 +63,6 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     free(CombainedValues);
 }
 
-void v2(){
-}
-
-void v3(){ 
-}
-
 void h(FILE **StringPointer1){
     char Symbol;
     int LetterCountLowerCase[26]={0},LetterCountUpperCase[26]={0},NumberCounter[10]={0},i = 0;
@@ -116,12 +110,6 @@ void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     if (NumberOfFunction==1)
     {
         v1(DataPointer1,ParsePointer1,StringPointer1);
-    }else if (NumberOfFunction==2)
-    {
-        v2(DataPointer1,ParsePointer1,StringPointer1);
-    }else if (NumberOfFunction==2)
-    {
-        v3(DataPointer1,ParsePointer1,StringPointer1);
     }else{
         printf("V: Incorrect display option.\n");
     }
