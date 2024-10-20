@@ -14,7 +14,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
         *DataPointer1=fopen("data.txt","r");
         if (*DataPointer1==NULL)
         {
-            printf("V1: Unopened txt files.");
+            printf("V1: Unopened txt files.\n");
             return;
         }
     }
@@ -23,7 +23,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
         *ParsePointer1=fopen("parse.txt","r");
         if (*ParsePointer1==NULL)
         {
-            printf("V1: Unopened txt files.");
+            printf("V1: Unopened txt files.\n");
             return;
         }
     }
@@ -32,7 +32,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
         *StringPointer1=fopen("string.txt","r");
         if (*StringPointer1==NULL)
         {
-            printf("V1: Unopened txt files.");
+            printf("V1: Unopened txt files.\n");
             return;
         }
     }    
