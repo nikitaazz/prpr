@@ -52,7 +52,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
             }
             if (WhileCounter==4)
             {
-                printf("Hodnota 2: %lf\n",atof(token));
+                printf("Hodnota 2: %f\n",atof(token));
             }   
             token = strtok(NULL, " ");
         }
