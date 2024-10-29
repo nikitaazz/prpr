@@ -5,9 +5,12 @@
 
 
 void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
-    char *StringValues = (char*) calloc(256 , sizeof(char)),*CombainedValues = (char*) calloc(256 , sizeof(char));
-    char *token,buffer[256];
-    int WhileCounter=0;
+    char *StringValues, *CombainedValues;
+    char *token, buffer[256];
+    int WhileCounter = 0;
+
+    StringValues = (char*) calloc(256, sizeof(char));
+    CombainedValues = (char*) calloc(256, sizeof(char));
     if (*DataPointer1==NULL)
     {
         *DataPointer1=fopen("data.txt","r");
@@ -86,17 +89,20 @@ void h(FILE **StringPointer1){
             LetterCountLowerCase[Symbol - 'a']++;
         }
     }
-    for (i = 0; i < 26; i++) {
+    i = 0;
+    for (i; i < 26; i++) {
         if (LetterCountUpperCase[i] > 0) {
             printf("%c : %d\n", i + 'A', LetterCountUpperCase[i]);
         }
     }
-    for (i = 0; i < 26; i++) {
+    i=0;
+    for (i; i < 26; i++) {
         if (LetterCountLowerCase[i] > 0) {
             printf("%c : %d\n", i + 'a', LetterCountLowerCase[i]);
         }
     }
-    for (i = 0; i < 10; i++) {
+    i = 0;
+    for (i; i < 10; i++) {
         if (NumberCounter[i] > 0) {
         printf("%d : %d\n", i, NumberCounter[i]);
         }
@@ -133,6 +139,11 @@ int main(void)
         } else if (CalledFunction=='h')
         {
             h(StringPointer1);
+        } else if (CalledFunction == 'k') { 
+            if (DataPointer1 != NULL) fclose(DataPointer1); 
+            if (StringPointer1 != NULL) fclose(StringPointer1); 
+            if (ParsePointer1 != NULL) fclose(ParsePointer1); 
+            break; 
         }
     }
     return 0;
