@@ -16,7 +16,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
         *DataPointer1=fopen("data.txt","r");
         if (*DataPointer1==NULL)
         {
-            printf("V1: Unopened txt files.\n");
+            printf("V1: Neotvorene txt subory.\n");
             return;
         }
     }
@@ -25,7 +25,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
         *ParsePointer1=fopen("parse.txt","r");
         if (*ParsePointer1==NULL)
         {
-            printf("V1: Unopened txt files.\n");
+            printf("V1: Neotvorene txt subory.\n");
             return;
         }
     }
@@ -34,7 +34,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
         *StringPointer1=fopen("string.txt","r");
         if (*StringPointer1==NULL)
         {
-            printf("V1: Unopened txt files.\n");
+            printf("V1: Neotvorene txt subory.\n");
             return;
         }
     }    
@@ -71,7 +71,7 @@ void h(FILE **StringPointer1){
     fseek(*StringPointer1, 0, SEEK_SET);
     if (*StringPointer1==NULL)
     {
-        printf("H: File not opened.\n");
+        printf("H: Neotvoreny subor.\n");
         return;
     }
     while ((Symbol = fgetc(*StringPointer1)) != EOF)
@@ -89,24 +89,22 @@ void h(FILE **StringPointer1){
             LetterCountLowerCase[Symbol - 'a']++;
         }
     }
-    i = 0;
-    for (i; i < 26; i++) {
+    for (i = 0; i < 26; i++) {
         if (LetterCountUpperCase[i] > 0) {
             printf("%c : %d\n", i + 'A', LetterCountUpperCase[i]);
         }
     }
-    i=0;
-    for (i; i < 26; i++) {
+    for (i = 0; i < 26; i++) {
         if (LetterCountLowerCase[i] > 0) {
             printf("%c : %d\n", i + 'a', LetterCountLowerCase[i]);
         }
     }
-    i = 0;
-    for (i; i < 10; i++) {
+    for (i = 0; i < 10; i++) {
         if (NumberCounter[i] > 0) {
-        printf("%d : %d\n", i, NumberCounter[i]);
+            printf("%d : %d\n", i, NumberCounter[i]);
         }
     }
+
 }
 
 void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
@@ -116,7 +114,7 @@ void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     {
         v1(DataPointer1,ParsePointer1,StringPointer1);
     }else{
-        printf("V: Incorrect display option.\n");
+        printf("V: Nespravne volba vypisu.\n");
     }
 }
 
@@ -140,9 +138,9 @@ int main(void)
         {
             h(StringPointer1);
         } else if (CalledFunction == 'k') { 
-            if (DataPointer1 != NULL) fclose(DataPointer1); 
-            if (StringPointer1 != NULL) fclose(StringPointer1); 
-            if (ParsePointer1 != NULL) fclose(ParsePointer1); 
+            if (DataPointer != NULL) fclose(DataPointer); 
+            if (StringPointer != NULL) fclose(StringPointer); 
+            if (ParsePointer != NULL) fclose(ParsePointer); 
             break; 
         }
     }
