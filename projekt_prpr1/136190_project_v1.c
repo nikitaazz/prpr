@@ -65,6 +65,20 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     free(CombainedValues);
 }
 
+
+
+void v2(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) { 
+}
+
+
+
+void n(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
+    char DataTxtLions=[256];
+}
+
+
+
+
 void h(FILE **StringPointer1){
     char Symbol;
     int LetterCountLowerCase[26]={0},LetterCountUpperCase[26]={0},NumberCounter[10]={0},i = 0;
@@ -107,16 +121,22 @@ void h(FILE **StringPointer1){
 
 }
 
+
+
 void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
     int NumberOfFunction;
     scanf("%d",&NumberOfFunction);
     if (NumberOfFunction==1)
     {
         v1(DataPointer1,ParsePointer1,StringPointer1);
+    }else if (NumberOfFunction==2)
+    {
+        v2(DataPointer1,ParsePointer1,StringPointer1);
     }else{
         printf("V: Nespravne volba vypisu.\n");
     }
 }
+
 
 
 int main(void)
@@ -142,6 +162,9 @@ int main(void)
             if (StringPointer != NULL) fclose(StringPointer); 
             if (ParsePointer != NULL) fclose(ParsePointer); 
             break; 
+        } else if (CalledFunction=='n')
+        {
+            n(DataPointer1,ParsePointer1,StringPointer1);
         }
     }
     return 0;
