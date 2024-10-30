@@ -68,12 +68,12 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
 void h(FILE **StringPointer1){
     char Symbol;
     int LetterCountLowerCase[26]={0},LetterCountUpperCase[26]={0},NumberCounter[10]={0},i = 0;
-    fseek(*StringPointer1, 0, SEEK_SET);
     if (*StringPointer1==NULL)
     {
         printf("H: Neotvoreny subor.\n");
         return;
     }
+    fseek(*StringPointer1, 0, SEEK_SET);
     while ((Symbol = fgetc(*StringPointer1)) != EOF)
     {
         if (Symbol >= '0' && Symbol <= '9')
