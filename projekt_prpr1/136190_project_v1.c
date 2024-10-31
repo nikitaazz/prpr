@@ -4,6 +4,25 @@
 
 
 
+char *my_strdup(const char *str) {
+    char *dup = malloc(strlen(str) + 1);
+    if (dup) {
+        strcpy(dup, str);
+    }
+    return dup;
+}
+
+
+void PrintArray(char **array, int size) {
+    int i=0;
+    for (i = 0; i < size; i++) {
+        if (array[i] != NULL) {
+            printf("%s\n", array[i]);
+        }
+    }
+}
+
+
 int CountStrings(FILE *file){
     char ch,z;
     int L = 0;
@@ -93,36 +112,58 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1) {
     int CountStringsDataPointer = CountStrings(*DataPointer1);
     int CountStringsParsePointer = CountStrings(*ParsePointer1);
     int CountStringsStringPointer = CountStrings(*StringPointer1);
-    int WhileCounter=0;
-    char *token,buffer[256];
-    char *DataTxtLions = (char *)malloc(CountStringsDataPointer * sizeof(char));
-    char *ParseTxtLions = (char *)malloc(CountStringsParsePointer * sizeof(char));
-    char *StringTxtLions = (char *)malloc(CountStringsStringPointer * sizeof(char));
-    while (fgets(buffer, sizeof(buffer),*DataPointer1)!=NULL)
-    {
-        printf("%c",buffer);
-        WhileCounter=0;
-        token=strtok(buffer,'\n');
-        DataTxtLions[WhileCounter]=token;
+    int i=0;
+
+    char **DataTxtLions = malloc(CountStringsDataPointer * sizeof(char *));
+    char **ParseTxtLions = malloc(CountStringsParsePointer * sizeof(char *));
+    char **StringTxtLions = malloc(CountStringsStringPointer * sizeof(char *));
+
+    char buffer[256];
+    int WhileCounter = 0;
+
+    if (*DataPointer1==NULL || *ParsePointer1==NULL || *StringPointer1==NULL) {
+        printf("N: Neotvoreny subor.\n");
+        return;
+    }
+
+    fseek(*StringPointer1, 0, SEEK_SET);
+    fseek(*DataPointer1, 0, SEEK_SET);
+    fseek(*ParsePointer1, 0, SEEK_SET);
+
+    while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && WhileCounter < CountStringsDataPointer) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+        DataTxtLions[WhileCounter] = my_strdup(buffer);
         WhileCounter++;
     }
-    WhileCounter=0;
-    while (fgets(buffer, sizeof(buffer),*ParsePointer1)!=NULL)
-    {
-        WhileCounter=0;
-        token=strtok(buffer,'\n');
-        ParseTxtLions[WhileCounter]=token;
+
+    WhileCounter = 0;
+    while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && WhileCounter < CountStringsParsePointer) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+        ParseTxtLions[WhileCounter] = my_strdup(buffer);
         WhileCounter++;
     }
-    WhileCounter=0;
-    while (fgets(buffer, sizeof(buffer),*StringPointer1)!=NULL)
-    {
-        WhileCounter=0;
-        token=strtok(buffer,'\n');
-        StringTxtLions[WhileCounter]=token;
+
+    WhileCounter = 0;
+    while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && WhileCounter < CountStringsStringPointer) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+        StringTxtLions[WhileCounter] = my_strdup(buffer);
         WhileCounter++;
     }
-    WhileCounter=0;
+
+    PrintArray(StringTxtLions,sizeof(StringTxtLions));
+    PrintArray(ParseTxtLions,sizeof(ParseTxtLions));
+    PrintArray(DataTxtLions,sizeof(DataTxtLions));
+
+    for (i = 0; i < CountStringsDataPointer; i++) {
+        free(DataTxtLions[i]);
+    }
+    for (i = 0; i < CountStringsParsePointer; i++) {
+        free(ParseTxtLions[i]);
+    }
+    for (i = 0; i < CountStringsStringPointer; i++) {
+        free(StringTxtLions[i]);
+    }
+
     free(DataTxtLions);
     free(ParseTxtLions);
     free(StringTxtLions);
