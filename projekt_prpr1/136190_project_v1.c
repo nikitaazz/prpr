@@ -4,7 +4,7 @@
 
 
 
-int CountStrings(FILE **file){
+int CountStrings(FILE *file){
     char ch,z;
     int L = 0;
     while ((ch = fgetc(file)) != EOF) {
@@ -90,31 +90,39 @@ void v2(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
 
 
 void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1) {
-    int CountStringsDataPointer = CountStrings(DataPointer1);
-    int CountStringsParsePointer = CountStrings(ParsePointer1);
-    int CountStringsStringPointer = CountStrings(StringPointer1);
+    int CountStringsDataPointer = CountStrings(*DataPointer1);
+    int CountStringsParsePointer = CountStrings(*ParsePointer1);
+    int CountStringsStringPointer = CountStrings(*StringPointer1);
+    int WhileCounter=0;
+    char *token,buffer[256];
     char *DataTxtLions = (char *)malloc(CountStringsDataPointer * sizeof(char));
     char *ParseTxtLions = (char *)malloc(CountStringsParsePointer * sizeof(char));
     char *StringTxtLions = (char *)malloc(CountStringsStringPointer * sizeof(char));
     while (fgets(buffer, sizeof(buffer),*DataPointer1)!=NULL)
     {
+        printf("%c",buffer);
         WhileCounter=0;
-        token=strtok(buffer," ");
-        printf("ID. mer. modulu: %s",fgets(StringValues, 256, *StringPointer1));
-        while (token!=NULL)
-        {
-            WhileCounter++;
-            if (WhileCounter==3)
-            {
-                printf("Hodnota 1: %d\n",atoi(token));
-            }
-            if (WhileCounter==4)
-            {
-                printf("Hodnota 2: %g\n",atof(token));
-            }   
-            token = strtok(NULL, " ");
-        }
+        token=strtok(buffer,'\n');
+        DataTxtLions[WhileCounter]=token;
+        WhileCounter++;
     }
+    WhileCounter=0;
+    while (fgets(buffer, sizeof(buffer),*ParsePointer1)!=NULL)
+    {
+        WhileCounter=0;
+        token=strtok(buffer,'\n');
+        ParseTxtLions[WhileCounter]=token;
+        WhileCounter++;
+    }
+    WhileCounter=0;
+    while (fgets(buffer, sizeof(buffer),*StringPointer1)!=NULL)
+    {
+        WhileCounter=0;
+        token=strtok(buffer,'\n');
+        StringTxtLions[WhileCounter]=token;
+        WhileCounter++;
+    }
+    WhileCounter=0;
     free(DataTxtLions);
     free(ParseTxtLions);
     free(StringTxtLions);
