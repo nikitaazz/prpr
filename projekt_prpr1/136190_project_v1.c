@@ -12,8 +12,6 @@ char *my_strdup(const char *str) {
     return dup;
 }
 
-
-
 int FindLargestElement(char **array, int size) {
     int i = 1;
     int maxIndex = 0;
@@ -31,7 +29,6 @@ int FindLargestElement(char **array, int size) {
     return maxIndex;
 }
 
-
 void PrintArray(char **array, int size) {
     int i=0;
     for (i = 0; i < size; i++) {
@@ -40,8 +37,6 @@ void PrintArray(char **array, int size) {
         }
     }
 }
-
-
 
 int CountStrings(FILE *file) {
     int count = 0;
@@ -62,6 +57,8 @@ int CountStrings(FILE *file) {
     }
     return count;
 }
+
+
 
 void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_numElements) {
     char *StringValues, *CombainedValues;
@@ -175,9 +172,6 @@ void v2(int numElements, char **DataTxtLions, char **ParseTxtLions, char **Strin
 }
 
 
-
-
-
 void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *largestDataIndex,int *largestParseIndex,int *largestStringIndex,char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions) {
 
     int i = 0;
@@ -269,9 +263,6 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
 }
 
 
-
-
-
 void h(FILE **StringPointer1){
     char Symbol;
     int LetterCountLowerCase[26]={0},LetterCountUpperCase[26]={0},NumberCounter[10]={0},i = 0;
@@ -314,6 +305,50 @@ void h(FILE **StringPointer1){
     fseek(*StringPointer1, 0, SEEK_SET);
 }
 
+
+void q(int numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
+    int YMain = 0, WhileCounter = 0, i = 0;
+
+    char **DataNewArray = malloc(numElements * sizeof(char *));
+    char **ParseNewArray = malloc(numElements * sizeof(char *));
+    char **StringNewArray = malloc(numElements * sizeof(char *));
+
+    for (i = 0; i < numElements; i++) {
+        DataNewArray[i] = malloc(256 * sizeof(char));
+        ParseNewArray[i] = malloc(256 * sizeof(char));
+        StringNewArray[i] = malloc(256 * sizeof(char));
+    }
+
+    scanf("%d", &YMain);
+    YMain--;
+
+    while (WhileCounter < numElements) {
+        if (WhileCounter != YMain) {
+            strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter]);
+            strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter]);
+            strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter]);
+        } else {
+            scanf(" %[^\n]", StringNewArray[WhileCounter]);
+            scanf(" %[^\n]", DataNewArray[WhileCounter]);
+            scanf(" %[^\n]", ParseNewArray[WhileCounter]);
+        }
+        WhileCounter++;
+    }
+
+    for (i = 0; i < numElements; i++) {
+        free((*DataTxtLions)[i]);
+        free((*ParseTxtLions)[i]);
+        free((*StringTxtLions)[i]);
+    }
+
+    free(*DataTxtLions);
+    free(*ParseTxtLions);
+    free(*StringTxtLions);
+
+    *DataTxtLions = DataNewArray;
+    *ParseTxtLions = ParseNewArray;
+    *StringTxtLions = StringNewArray;
+}
 
 
 void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions, int numElements, int *p_numElements) {
@@ -365,7 +400,11 @@ int main(void)
         } else if (CalledFunction=='n')
         {
             n(DataPointer1, ParsePointer1, StringPointer1, pLargestDataIndex, pLargestParseIndex, pLargestStringIndex, &DataTxtLions, &ParseTxtLions, &StringTxtLions);
+        }else if (CalledFunction=='q')
+        {
+            q(numElements, &DataTxtLions, &ParseTxtLions, &StringTxtLions);
         }
+        
     }
     return 0;
 }
