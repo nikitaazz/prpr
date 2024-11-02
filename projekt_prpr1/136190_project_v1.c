@@ -321,6 +321,11 @@ void q(int numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***Str
 
     scanf("%d", &YMain);
     YMain--;
+    if (YMain>numElements)
+    {
+        YMain=numElements-1;
+    }
+    
 
     while (WhileCounter < numElements) {
         if (WhileCounter != YMain) {
