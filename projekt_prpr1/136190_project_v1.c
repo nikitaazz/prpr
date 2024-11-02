@@ -17,10 +17,11 @@ char *my_strdup(const char *str) {
 int FindLargestElement(char **array, int size) {
     int i = 1;
     int maxIndex = 0;
+    int currentLength;
     int maxLength = strlen(array[0]);
 
     for (i = 1; i < size; i++) {
-        int currentLength = strlen(array[i]);
+        currentLength = strlen(array[i]);
         if (currentLength > maxLength) {
             maxLength = currentLength;
             maxIndex = i;
@@ -62,7 +63,7 @@ int CountStrings(FILE *file) {
     return count;
 }
 
-void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
+void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_numElements) {
     char *StringValues, *CombainedValues;
     char *token, buffer[256];
     int WhileCounter = 0;
@@ -96,6 +97,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
             return;
         }
     }    
+    *p_numElements=CountStrings(*DataPointer1);
     fseek(*StringPointer1, 0, SEEK_SET);
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
@@ -127,12 +129,52 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
 }
 
 
+void v2(int numElements, char **DataTxtLions, char **ParseTxtLions, char **StringTxtLions) {
+    int Counter = 0;
+    char *token;
+    double hodnota1 = 0.0, hodnota2 = 0.0;
+    int i = 0;
 
-void v2(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
-    fseek(*StringPointer1, 0, SEEK_SET);
-    fseek(*DataPointer1, 0, SEEK_SET);
-    fseek(*ParsePointer1, 0, SEEK_SET);
+    if (DataTxtLions == NULL || ParseTxtLions == NULL || StringTxtLions == NULL) {
+        printf("V2: Nenaplnene polia.\n");
+        return;
+    }
+
+    while (Counter < numElements) {
+        char *dataLineCopy = (char *)malloc(strlen(DataTxtLions[Counter]) + 1);
+        if (dataLineCopy == NULL) {
+            printf("Memory allocation error\n");
+            return;
+        }
+        strcpy(dataLineCopy, DataTxtLions[Counter]);
+
+        token = strtok(dataLineCopy, " ");
+        i = 0;
+        hodnota1 = 0.0;
+        hodnota2 = 0.0;
+
+        while (token != NULL) {
+            if (i == 2) {
+                hodnota1 = atoi(token);
+            } else if (i == 3) {
+                hodnota2 = atof(token);
+            }
+            i++;
+            token = strtok(NULL, " ");
+        }
+
+        printf("ID. mer. modulu: %s\n", StringTxtLions[Counter]);
+        printf("Hodnota 1: %d\n", (int)hodnota1);
+        printf("Hodnota 2: %g\n", hodnota2);
+        printf("Poznámka: %s\n", ParseTxtLions[Counter]);
+        printf("\n");
+
+        free(dataLineCopy);
+        Counter++;
+    }
 }
+
+
 
 
 
@@ -142,9 +184,18 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     char buffer[256];
     int DataCounter = 0, StringCounter = 0, ParseCounter = 0;
 
-    int CountStringsDataPointer = CountStrings(*DataPointer1);
-    int CountStringsParsePointer = CountStrings(*ParsePointer1);
-    int CountStringsStringPointer = CountStrings(*StringPointer1);
+    int CountStringsDataPointer = 0;
+    int CountStringsParsePointer = 0;
+    int CountStringsStringPointer = 0;
+
+    if (*DataPointer1 == NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL) {
+        printf("N: Neotvoreny subor.\n");
+        return;
+    }
+
+    CountStringsDataPointer = CountStrings(*DataPointer1);
+    CountStringsParsePointer = CountStrings(*ParsePointer1);
+    CountStringsStringPointer = CountStrings(*StringPointer1);
 
     if (*DataTxtLions) {
         for (i = 0; i < CountStringsDataPointer; i++) {
@@ -167,11 +218,6 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
         free(*StringTxtLions);
     }
 
-    if (*DataPointer1 == NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL) {
-        printf("N: Neotvoreny subor.\n");
-        return;
-    }
-
     *DataTxtLions = malloc(CountStringsDataPointer * sizeof(char *));
     *ParseTxtLions = malloc(CountStringsParsePointer * sizeof(char *));
     *StringTxtLions = malloc(CountStringsStringPointer * sizeof(char *));
@@ -181,19 +227,34 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     fseek(*StringPointer1, 0, SEEK_SET);
 
     while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && DataCounter < CountStringsDataPointer) {
-        buffer[strcspn(buffer, "\n")] = '\0';
+        for (i = 0; buffer[i] != '\0'; i++) {
+            if (buffer[i] == '\n') {
+                buffer[i] = '\0';
+                break;
+            }
+        }
         (*DataTxtLions)[DataCounter] = my_strdup(buffer);
         DataCounter++;
     }
 
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && ParseCounter < CountStringsParsePointer) {
-        buffer[strcspn(buffer, "\n")] = '\0';
+        for (i = 0; buffer[i] != '\0'; i++) {
+            if (buffer[i] == '\n') {
+                buffer[i] = '\0';
+                break;
+            }
+        }
         (*ParseTxtLions)[ParseCounter] = my_strdup(buffer);
         ParseCounter++;
     }
 
     while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && StringCounter < CountStringsStringPointer) {
-        buffer[strcspn(buffer, "\n")] = '\0';
+        for (i = 0; buffer[i] != '\0'; i++) {
+            if (buffer[i] == '\n') {
+                buffer[i] = '\0';
+                break;
+            }
+        }
         (*StringTxtLions)[StringCounter] = my_strdup(buffer);
         StringCounter++;
     }
@@ -201,19 +262,6 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     *largestDataIndex = FindLargestElement(*DataTxtLions, CountStringsDataPointer);
     *largestParseIndex = FindLargestElement(*ParseTxtLions, CountStringsParsePointer);
     *largestStringIndex = FindLargestElement(*StringTxtLions, CountStringsStringPointer);
-
-    printf("Data Array:\n");
-    PrintArray(*DataTxtLions, CountStringsDataPointer);
-    
-    printf("\nParse Array:\n");
-    PrintArray(*ParseTxtLions, CountStringsParsePointer);
-    
-    printf("\nString Array:\n");
-    PrintArray(*StringTxtLions, CountStringsStringPointer);
-
-    printf("\nLargest Data Index: %d\n", *largestDataIndex);
-    printf("Largest Parse Index: %d\n", *largestParseIndex);
-    printf("Largest String Index: %d\n", *largestStringIndex);
 
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
@@ -268,15 +316,15 @@ void h(FILE **StringPointer1){
 
 
 
-void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1) {
+void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions, int numElements, int *p_numElements) {
     int NumberOfFunction;
     scanf("%d",&NumberOfFunction);
     if (NumberOfFunction==1)
     {
-        v1(DataPointer1,ParsePointer1,StringPointer1);
+        v1(DataPointer1,ParsePointer1,StringPointer1,p_numElements);
     }else if (NumberOfFunction==2)
     {
-        v2(DataPointer1,ParsePointer1,StringPointer1);
+        v2(numElements, *DataTxtLions, *ParseTxtLions, *StringTxtLions);
     }else{
         printf("V: Nespravne volba vypisu.\n");
     }
@@ -298,12 +346,14 @@ int main(void)
     char **DataTxtLions = NULL;
     char **ParseTxtLions = NULL;
     char **StringTxtLions = NULL;
+    int numElements=0;
+    int *p_numElements = &numElements;
     while (1)
     {
         scanf("%c",&CalledFunction);
         if (CalledFunction=='v')
         {
-            v(DataPointer1,ParsePointer1,StringPointer1);
+            v(DataPointer1, ParsePointer1, StringPointer1, &DataTxtLions, &ParseTxtLions, &StringTxtLions,numElements,p_numElements);
         } else if (CalledFunction=='h')
         {
             h(StringPointer1);
