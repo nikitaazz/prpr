@@ -319,6 +319,11 @@ void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
     char **ParseNewArray = malloc(*numElements+1 * sizeof(char *));
     char **StringNewArray = malloc(*numElements+1 * sizeof(char *));
 
+    if (*DataTxtLions == NULL || *ParseTxtLions == NULL || *StringTxtLions == NULL) {
+        printf("Q: Polia nie su vytvorene.\n");
+        return;
+    }
+
     for (i = 0; i < *numElements+1; i++) {
         DataNewArray[i] = malloc(256 * sizeof(char));
         ParseNewArray[i] = malloc(256 * sizeof(char));
