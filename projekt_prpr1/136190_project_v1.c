@@ -3,7 +3,6 @@
 #include <string.h>
 
 
-
 char *my_strdup(const char *str) {
     char *dup = malloc(strlen(str) + 1);
     if (dup) {
@@ -308,6 +307,11 @@ void h(FILE **StringPointer1){
 
 void q(int numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
     int YMain = 0, WhileCounter = 0, i = 0;
+
+    if (DataTxtLions == NULL || ParseTxtLions == NULL || StringTxtLions == NULL) {
+        printf("Q: Polia nie su vytvorene.\n");
+        return;
+    }
 
     char **DataNewArray = malloc(numElements * sizeof(char *));
     char **ParseNewArray = malloc(numElements * sizeof(char *));
