@@ -57,6 +57,13 @@ int CountStrings(FILE *file) {
     return count;
 }
 
+int countElements(char **array) {
+    int count = 0;
+    while (array[count] != NULL) {
+        count++;
+    }
+    return count;
+}
 
 
 void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_numElements) {
@@ -305,19 +312,14 @@ void h(FILE **StringPointer1){
 }
 
 
-void q(int numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
+void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
     int YMain = 0, WhileCounter = 0, i = 0;
 
-    if (DataTxtLions == NULL || ParseTxtLions == NULL || StringTxtLions == NULL) {
-        printf("Q: Polia nie su vytvorene.\n");
-        return;
-    }
+    char **DataNewArray = malloc(*numElements+1 * sizeof(char *));
+    char **ParseNewArray = malloc(*numElements+1 * sizeof(char *));
+    char **StringNewArray = malloc(*numElements+1 * sizeof(char *));
 
-    char **DataNewArray = malloc(numElements * sizeof(char *));
-    char **ParseNewArray = malloc(numElements * sizeof(char *));
-    char **StringNewArray = malloc(numElements * sizeof(char *));
-
-    for (i = 0; i < numElements; i++) {
+    for (i = 0; i < *numElements+1; i++) {
         DataNewArray[i] = malloc(256 * sizeof(char));
         ParseNewArray[i] = malloc(256 * sizeof(char));
         StringNewArray[i] = malloc(256 * sizeof(char));
@@ -325,26 +327,30 @@ void q(int numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***Str
 
     scanf("%d", &YMain);
     YMain--;
-    if (YMain>numElements)
+    if (YMain>*numElements)
     {
-        YMain=numElements-1;
+        YMain=*numElements-1;
     }
     
 
-    while (WhileCounter < numElements) {
-        if (WhileCounter != YMain) {
+    WhileCounter = 0;
+    while (WhileCounter < *numElements + 1) {
+        if (WhileCounter < YMain) {
             strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter]);
             strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter]);
             strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter]);
-        } else {
+        } else if (WhileCounter == YMain) {
             scanf(" %[^\n]", StringNewArray[WhileCounter]);
             scanf(" %[^\n]", DataNewArray[WhileCounter]);
             scanf(" %[^\n]", ParseNewArray[WhileCounter]);
+        } else {
+            strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter - 1]);
+            strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter - 1]);
+            strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter - 1]);
         }
         WhileCounter++;
     }
-
-    for (i = 0; i < numElements; i++) {
+    for (i = 0; i < *numElements; i++) {
         free((*DataTxtLions)[i]);
         free((*ParseTxtLions)[i]);
         free((*StringTxtLions)[i]);
@@ -357,6 +363,56 @@ void q(int numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***Str
     *DataTxtLions = DataNewArray;
     *ParseTxtLions = ParseNewArray;
     *StringTxtLions = StringNewArray;
+
+    (*numElements)++;
+}
+
+
+void w(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
+    int i=0;
+    int deletedCount = 0;
+    int newArrayIndex = 0;
+    char idToDelete[256];
+
+
+
+    char **DataNewArray = malloc((*numElements) * sizeof(char *));
+    char **ParseNewArray = malloc((*numElements) * sizeof(char *));
+    char **StringNewArray = malloc((*numElements) * sizeof(char *));
+
+    if (*DataTxtLions == NULL || *StringTxtLions == NULL || *ParseTxtLions == NULL) {
+        printf("W: Polia nie su vytvorene.\n");
+        return;
+    }
+    
+    scanf(" %s", idToDelete);
+    
+    
+    for (i = 0; i < *numElements; i++) {
+        if (strcmp((*StringTxtLions)[i], idToDelete) == 0) {
+            deletedCount++;
+            free((*DataTxtLions)[i]);
+            free((*ParseTxtLions)[i]);
+            free((*StringTxtLions)[i]);
+        } else {
+            DataNewArray[newArrayIndex] = (*DataTxtLions)[i];
+            ParseNewArray[newArrayIndex] = (*ParseTxtLions)[i];
+            StringNewArray[newArrayIndex] = (*StringTxtLions)[i];
+            newArrayIndex++;
+        }
+    }
+
+    free(*DataTxtLions);
+    free(*ParseTxtLions);
+    free(*StringTxtLions);
+
+    *DataTxtLions = DataNewArray;
+    *ParseTxtLions = ParseNewArray;
+    *StringTxtLions = StringNewArray;
+
+    *numElements -= deletedCount;
+
+    printf("W: Vymazalo sa : %d zaznamov !\n", deletedCount);
 }
 
 
@@ -371,6 +427,25 @@ void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***
         v2(numElements, *DataTxtLions, *ParseTxtLions, *StringTxtLions);
     }else{
         printf("V: Nespravne volba vypisu.\n");
+    }
+}
+
+
+void e(char ***ParseTxtLions, int numElements) {
+    int i = 0;
+    char ExploreString[256];
+
+    if (*ParseTxtLions == NULL) {
+        printf("E: Polia nie su vytvorene.\n");
+        return;
+    }
+    
+    scanf("%s", ExploreString);
+    
+    for (i = 0; i < numElements; i++) {
+        if (strstr((*ParseTxtLions)[i], ExploreString) != NULL) {
+            printf("%s\n", (*ParseTxtLions)[i]);
+        }
     }
 }
 
@@ -411,7 +486,13 @@ int main(void)
             n(DataPointer1, ParsePointer1, StringPointer1, pLargestDataIndex, pLargestParseIndex, pLargestStringIndex, &DataTxtLions, &ParseTxtLions, &StringTxtLions);
         }else if (CalledFunction=='q')
         {
-            q(numElements, &DataTxtLions, &ParseTxtLions, &StringTxtLions);
+            q(&numElements, &DataTxtLions, &ParseTxtLions, &StringTxtLions);
+        }else if (CalledFunction=='w')
+        {
+            w(&numElements, &DataTxtLions, &ParseTxtLions, &StringTxtLions);
+        }else if (CalledFunction=='e')
+        {
+            e(&ParseTxtLions,numElements);
         }
         
     }
