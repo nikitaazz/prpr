@@ -3,6 +3,30 @@
 #include <string.h>
 
 
+
+struct DataStructure
+{
+    int DataThirdValue;
+    double DataFourthValue;
+    struct DataStructure *next;
+};
+
+
+struct ParseStructure
+{
+    char Value[256];
+    struct ParseStruct *next;
+};
+
+
+struct StringStructure
+{
+    char IDValue[256];
+    struct StringStructure *next;
+};
+
+
+
 char *my_strdup(const char *str) {
     char *dup = malloc(strlen(str) + 1);
     if (dup) {
@@ -64,6 +88,7 @@ int countElements(char **array) {
     }
     return count;
 }
+
 
 
 void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_numElements) {
@@ -266,6 +291,55 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
     fseek(*StringPointer1, 0, SEEK_SET);
+}
+
+
+void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int numElements){
+    struct DataStructure DataStructure[numElements];
+    struct ParseStructure ParseStructure[numElements];
+    struct StringStructure StringStructure[numElements];
+
+    int i = 0, whileCounter = 0;
+    const numOfStrings = numElements;
+    char buffer[256], *token;
+
+    if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
+    {
+        printf("M: Neotvoreny subor.\n");
+        return;
+    }
+
+    i=0;
+    while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && i < numElements)
+    {
+        whileCounter=0;
+        token = strtok(buffer," ");
+        while (token!=NULL)
+        {
+            whileCounter++;
+            if (whileCounter==3)
+            {
+                DataStructure[i].DataThirdValue=atoi(token);
+            }else if (whileCounter==4)
+            {
+                DataStructure[i].DataFourthValue=atof(token);
+            }
+            token = strtok(NULL," ");
+        }
+        i++;
+    }
+
+    i=0;
+    while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
+    {
+        i++;
+    }
+
+    i=0;
+    while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && i < numElements)
+    {
+        i++;
+    }
 }
 
 
@@ -498,7 +572,11 @@ int main(void)
         }else if (CalledFunction=='e')
         {
             e(&ParseTxtLions,numElements);
+        }else if (CalledFunction=='m')
+        {
+            m(DataPointer1, ParsePointer1, StringPointer1,numElements);
         }
+        
         
     }
     return 0;
