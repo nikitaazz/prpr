@@ -620,7 +620,7 @@ int main(void)
         }else if (CalledFunction=='m')
         {
             m(DataPointer1, ParsePointer1, StringPointer1,numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
-        }else if (CalledFunction=='a')
+        }/*else if (CalledFunction=='a')
         {
             a();
         }else if (CalledFunction='s')
@@ -629,7 +629,7 @@ int main(void)
         }else if (CalledFunction=='d')
         {
             d();
-        }
+        }*/
         
         
         
