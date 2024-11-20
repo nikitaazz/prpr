@@ -25,6 +25,13 @@ struct ParseStructure
 };
 
 
+struct StringStructure
+{
+    char ID[256];
+    struct StringStructure *next;
+};
+
+
 
 char *my_strdup(const char *str) {
     char *dup = malloc(strlen(str) + 1);
@@ -202,6 +209,15 @@ void v2(int numElements, char **DataTxtLions, char **ParseTxtLions, char **Strin
 }
 
 
+void v3(struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
+    if (DataStructurePointer==NULL || ParseStructurePointer==NULL || StringStructurePointer==NULL)
+    {
+        printf("V3: Nenaplnený spajany zoznam.\n");
+        return;
+    }
+}
+
+
 void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *largestDataIndex,int *largestParseIndex,int *largestStringIndex,char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions) {
 
     int i = 0;
@@ -293,9 +309,7 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
 }
 
 
-void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int numElements){
-    struct DataStructure *DataStructurePointer = NULL;
-    struct ParseStructure *ParseStructurePointer = NULL;
+void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
 
     int i = 0, whileCounter = 0;
     char buffer[256], *token;
@@ -334,6 +348,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         i++;
     }
     DataStructurePointer->next=NULL;
+    printf("Z");
 
     whileCounter=0;
     i=0;
@@ -519,7 +534,7 @@ void w(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
 }
 
 
-void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions, int numElements, int *p_numElements) {
+void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions, int numElements, int *p_numElements,struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer) {
     int NumberOfFunction;
     scanf("%d",&NumberOfFunction);
     if (NumberOfFunction==1)
@@ -528,6 +543,9 @@ void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***
     }else if (NumberOfFunction==2)
     {
         v2(numElements, *DataTxtLions, *ParseTxtLions, *StringTxtLions);
+    }else if (NumberOfFunction==3)
+    {
+        v3(DataStructurePointer,ParseStructurePointer,StringStructurePointer);
     }else{
         printf("V: Nespravne volba vypisu.\n");
     }
@@ -562,6 +580,9 @@ int main(void)
     FILE **DataPointer1 = &DataPointer;
     FILE **ParsePointer1 = &ParsePointer;
     FILE **StringPointer1 = &StringPointer;
+    struct DataStructure *DataStructurePointer = NULL;
+    struct ParseStructure *ParseStructurePointer = NULL;
+    struct StringStructure *StringStructurePointer = NULL;
     char CalledFunction;
     int largestDataIndex = 0, largestParseIndex = 0,largestStringIndex = 0;
     int *pLargestDataIndex = &largestDataIndex, *pLargestParseIndex = &largestParseIndex, *pLargestStringIndex = &largestStringIndex;
@@ -575,7 +596,7 @@ int main(void)
         scanf("%c",&CalledFunction);
         if (CalledFunction=='v')
         {
-            v(DataPointer1, ParsePointer1, StringPointer1, &DataTxtLions, &ParseTxtLions, &StringTxtLions,numElements,p_numElements);
+            v(DataPointer1, ParsePointer1, StringPointer1, &DataTxtLions, &ParseTxtLions, &StringTxtLions,numElements,p_numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
         } else if (CalledFunction=='h')
         {
             h(StringPointer1);
@@ -598,8 +619,20 @@ int main(void)
             e(&ParseTxtLions,numElements);
         }else if (CalledFunction=='m')
         {
-            m(DataPointer1, ParsePointer1, StringPointer1,numElements);
+            m(DataPointer1, ParsePointer1, StringPointer1,numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
+        }else if (CalledFunction=='a')
+        {
+            a();
+        }else if (CalledFunction='s')
+        {
+            s();
+        }else if (CalledFunction=='d')
+        {
+            d();
         }
+        
+        
+        
         
         
     }
