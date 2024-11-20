@@ -295,9 +295,9 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
 
 
 void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int numElements){
-    struct DataStructure DataStructure[numElements];
-    struct ParseStructure ParseStructure[numElements];
-    struct StringStructure StringStructure[numElements];
+    struct DataStructure *DataStructurePointer = NULL;
+    struct ParseStructure *ParseStructurePointer = NULL;
+    struct StringStructure *StringStructurePointer = NULL;
 
     int i = 0, whileCounter = 0;
     const numOfStrings = numElements;
@@ -314,20 +314,23 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     {
         whileCounter=0;
         token = strtok(buffer," ");
+        DataStructurePointer=(struct DataStructure*)malloc(sizeof(struct DataStructure));
         while (token!=NULL)
         {
             whileCounter++;
             if (whileCounter==3)
             {
-                DataStructure[i].DataThirdValue=atoi(token);
+                DataStructurePointer->DataThirdValue=atoi(token);
             }else if (whileCounter==4)
             {
-                DataStructure[i].DataFourthValue=atof(token);
+                DataStructurePointer->DataFourthValue=atof(token);
             }
             token = strtok(NULL," ");
         }
+        DataStructurePointer=DataStructurePointer->next;
         i++;
     }
+    DataStructurePointer->next=NULL;
 
     i=0;
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
