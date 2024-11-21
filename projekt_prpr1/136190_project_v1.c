@@ -311,8 +311,13 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
 
 void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
 
-    int i = 0, whileCounter = 0;
-    char buffer[256], *token;
+
+    struct ParseStructure *ParseStructure1 = ParseStructurePointer;
+    struct DataStructure *DataStructure1 = DataStructurePointer;
+    struct StringStructure *StringStructure1 = StringStructurePointer;
+
+    int i = 0, whileCounter = 0, whileCount=0;
+    char buffer[1024], *token;
 
     if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
     {
@@ -331,51 +336,56 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
             whileCounter++;
             if (whileCounter==1)
             {
-                DataStructurePointer->DataFirstValue=atoi(token);
+                DataStructure1->DataFirstValue=atoi(token);
             }else if (whileCounter==2)
             {
-                DataStructurePointer->DataSecondValue=atoi(token);
+                DataStructure1->DataSecondValue=atoi(token);
             }else if (whileCounter==3)
             {
-                DataStructurePointer->DataThirdValue=atoi(token);
+                DataStructure1->DataThirdValue=atoi(token);
             }else if (whileCounter==4)
             {
-                DataStructurePointer->DataFourthValue=atof(token);
+                printf("%s\n",token);
+                DataStructure1->DataFourthValue=atof(token);
             }
             token = strtok(NULL," ");
         }
+      
         DataStructurePointer=DataStructurePointer->next;
         i++;
     }
-    DataStructurePointer->next=NULL;
-    printf("Z");
+   
 
-    whileCounter=0;
     i=0;
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
     {
+        whileCount=0;
         ParseStructurePointer=(struct ParseStructure*)malloc(sizeof(struct ParseStructure));
         token=strtok(buffer,"#");
         while (token!=NULL)
         {
-            whileCounter++;
-            if (whileCounter==1)
+            whileCount++;
+            printf("%d - %s\n", whileCount, token);
+            if (whileCount==1)
             {
+                // printf("%s",ParseStructurePointer->ID);
                 strcpy(ParseStructurePointer->ID,token);
-            }else if (whileCounter==2)
+            }else if (whileCount==2)
             {
                 ParseStructurePointer->FirstValue=atof(token);
-            }else if (whileCounter==3)
+                printf("%s r\n",token);
+            }else if (whileCount==3)
             {
+                printf("%s l\n",token);
                 sscanf(token, "%2d%2d", &ParseStructurePointer->Hours, &ParseStructurePointer->Minutes);
-            }else if (whileCounter==4)
+            }else if (whileCount==4)
             {
                 strcpy(ParseStructurePointer->Comment,token);
             }
-            token=strtok(NULL,"#");
+            printf("%s s\n",token);
+            token = strtok(NULL,"#");
             ParseStructurePointer=ParseStructurePointer->next;
         }
-        ParseStructurePointer->next=NULL;
         i++;
     }
     printf("M: Nacitalo sa %d zaznamov.\n", i);
