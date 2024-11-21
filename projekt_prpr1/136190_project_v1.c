@@ -331,18 +331,15 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     {
         whileCounter=0;
         token = strtok(buffer," ");
-        DataStructurePointer=(struct DataStructure*)malloc(sizeof(struct DataStructure));
-        printf("%d - %s\n", whileCount, token);
+        DataStructure1=(struct DataStructure*)malloc(sizeof(struct DataStructure));
         while (token!=NULL)
         {
             whileCounter++;
             if (whileCounter==1)
             {
-                printf("%d - %s\n", whileCount, token);
                 DataStructure1->DataFirstValue=atoi(token);
             }else if (whileCounter==2)
             {
-                printf("%d - %s\n", whileCount, token);
                 DataStructure1->DataSecondValue=atoi(token);
             }else if (whileCounter==3)
             {
@@ -352,9 +349,8 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
                 DataStructure1->DataFourthValue=atof(token);
             }
             token = strtok(NULL," ");
-            printf("SVO");
         }
-        DataStructurePointer=DataStructurePointer->next;
+        DataStructure1=DataStructure1->next;
         i++;
     }
    
@@ -363,35 +359,32 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
     {
         whileCount=0;
-        ParseStructurePointer=(struct ParseStructure*)malloc(sizeof(struct ParseStructure));
+        ParseStructure1=(struct ParseStructure*)malloc(sizeof(struct ParseStructure));
         token=strtok(buffer,"#");
         while (token!=NULL)
         {
             whileCount++;
-            printf("%d - %s\n", whileCount, token);
             if (whileCount==1)
             {
-                printf("%s\n 1 ",ParseStructure1->ID);
                 strcpy(ParseStructure1->ID,token);
             }else if (whileCount==2)
             {
                 ParseStructure1->FirstValue=atof(token);
-                printf("%s r\n 2 ",token);
             }else if (whileCount==3)
             {
-                printf("%s l\n 3 ",token);
                 sscanf(token, "%2d%2d", &ParseStructure1->Hours, &ParseStructure1->Minutes);
             }else if (whileCount==4)
             {
                 strcpy(ParseStructure1->Comment,token);
             }
-            printf("%s s\n",token);
             token = strtok(NULL,"#");
-            ParseStructurePointer=ParseStructurePointer->next;
         }
+        ParseStructure1=ParseStructure1->next;
         i++;
     }
 
+
+    i=0;
     while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && i < numElements)
     {
         printf("r");
@@ -599,8 +592,11 @@ int main(void)
     FILE **ParsePointer1 = &ParsePointer;
     FILE **StringPointer1 = &StringPointer;
     struct DataStructure *DataStructurePointer = NULL;
+    struct DataStructure *p1;
     struct ParseStructure *ParseStructurePointer = NULL;
+    struct ParseStructure *p2;
     struct StringStructure *StringStructurePointer = NULL;
+    struct StringStructure *p3;
     char CalledFunction;
     int largestDataIndex = 0, largestParseIndex = 0,largestStringIndex = 0;
     int *pLargestDataIndex = &largestDataIndex, *pLargestParseIndex = &largestParseIndex, *pLargestStringIndex = &largestStringIndex;
@@ -622,6 +618,26 @@ int main(void)
             if (DataPointer != NULL) fclose(DataPointer); 
             if (StringPointer != NULL) fclose(StringPointer); 
             if (ParsePointer != NULL) fclose(ParsePointer); 
+            printf("%p\n", DataStructurePointer);
+            while (DataStructurePointer!=NULL)
+            {
+                p1=DataStructurePointer->next;
+                free(DataStructurePointer);
+                DataStructurePointer=p1;
+            }
+            while (ParseStructurePointer!=NULL)
+            {
+                p2=ParseStructurePointer->next;
+                free(ParseStructurePointer);
+                ParseStructurePointer=p2;
+            }
+            while (StringStructurePointer!=NULL)
+            {
+                p3=StringStructurePointer->next;
+                free(StringStructurePointer);
+                StringStructurePointer=p3;
+            }
+            
             break; 
         } else if (CalledFunction=='n')
         {
