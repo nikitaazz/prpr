@@ -16,18 +16,18 @@ struct DataStructure
 
 struct ParseStructure
 {
-    char ID[256];
+    char ID[1024];
     double FirstValue;
     int Hours;
     int Minutes;
-    char Comment[256];
+    char Comment[1024];
     struct ParseStructure *next;
 };
 
 
 struct StringStructure
 {
-    int ID;
+    char ID[1024];
     struct StringStructure *next;
 };
 
@@ -58,14 +58,7 @@ int FindLargestElement(char **array, int size) {
     return maxIndex;
 }
 
-void PrintArray(char **array, int size) {
-    int i=0;
-    for (i = 0; i < size; i++) {
-        if (array[i] != NULL) {
-            printf("%s\n", array[i]);
-        }
-    }
-}
+
 
 int CountStrings(FILE *file) {
     int count = 0;
@@ -308,17 +301,26 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     fseek(*StringPointer1, 0, SEEK_SET);
 }
 
+void print(struct DataStructure *zac){
+    if(zac == NULL){
+        return;
+    }
+    zac=zac->next;
+    printf("%d\n", zac->DataFirstValue);
+    print(zac);
+}
 
 void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
-    struct ParseStructure *ParseStructure1 = ParseStructurePointer;
-    struct DataStructure *DataStructure1 = DataStructurePointer;
-    struct StringStructure *StringStructure1 = StringStructurePointer;
+    struct ParseStructure *ParseStructure1 = NULL;
+    struct DataStructure *DataStructure1 = NULL;
+    struct StringStructure *StringStructure1 = NULL;
+
+    struct ParseStructure *akt_p = ParseStructurePointer;
+    struct DataStructure *akt_d = DataStructurePointer;
+    struct StringStructure *akt_s = StringStructurePointer;
 
     int i = 0, whileCounter = 0, whileCount=0;
     char buffer[1024], *token;
-
-    StringStructure1=(struct StringStructure*)malloc(sizeof(struct StringStructure));
-    StringStructure1->ID=1;
 
     if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
     {
@@ -350,11 +352,15 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
             }
             token = strtok(NULL," ");
         }
-        DataStructure1=DataStructure1->next;
+        if (akt_d == NULL) {  
+            DataStructurePointer = DataStructure1;
+            akt_d = DataStructurePointer;  
+        } else {  
+            akt_d->next = DataStructure1;  
+            akt_d = akt_d->next;  
+        }
         i++;
     }
-   
-
     i=0;
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
     {
@@ -379,15 +385,20 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
             }
             token = strtok(NULL,"#");
         }
-        ParseStructure1=ParseStructure1->next;
+        akt_p->next = ParseStructure1;
+        akt_p = akt_p->next;
+    
         i++;
     }
-
-
     i=0;
     while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && i < numElements)
     {
-        printf("r");
+        StringStructure1=(struct StringStructure*)malloc(sizeof(struct StringStructure));
+        strcpy(StringStructure1->ID, buffer);
+        akt_s->next = StringStructure1;
+        akt_s = akt_s->next;
+    
+        i++;
     }
     printf("M: Nacitalo sa %d zaznamov.\n", i);
 }
@@ -591,12 +602,12 @@ int main(void)
     FILE **DataPointer1 = &DataPointer;
     FILE **ParsePointer1 = &ParsePointer;
     FILE **StringPointer1 = &StringPointer;
-    struct DataStructure *DataStructurePointer = NULL;
-    struct DataStructure *p1;
-    struct ParseStructure *ParseStructurePointer = NULL;
-    struct ParseStructure *p2;
-    struct StringStructure *StringStructurePointer = NULL;
-    struct StringStructure *p3;
+    struct DataStructure *DataStructurePointer = (struct DataStructure*)malloc(sizeof(struct DataStructure));
+    struct DataStructure *p1 = NULL;
+    struct ParseStructure *ParseStructurePointer = (struct ParseStructure*)malloc(sizeof(struct ParseStructure));
+    struct ParseStructure *p2 = NULL;
+    struct StringStructure *StringStructurePointer = (struct StringStructure*)malloc(sizeof(struct StringStructure));
+    struct StringStructure *p3 = NULL;
     char CalledFunction;
     int largestDataIndex = 0, largestParseIndex = 0,largestStringIndex = 0;
     int *pLargestDataIndex = &largestDataIndex, *pLargestParseIndex = &largestParseIndex, *pLargestStringIndex = &largestStringIndex;
@@ -605,6 +616,9 @@ int main(void)
     char **StringTxtLions = NULL;
     int numElements=0;
     int *p_numElements = &numElements;
+    DataStructurePointer->next = NULL;
+    StringStructurePointer->next = NULL;
+    ParseStructurePointer->next = NULL;
     while (1)
     {
         scanf("%c",&CalledFunction);
@@ -615,11 +629,13 @@ int main(void)
         {
             h(StringPointer1);
         } else if (CalledFunction == 'k') { 
+            print(DataStructurePointer);
             if (DataPointer != NULL) fclose(DataPointer); 
             if (StringPointer != NULL) fclose(StringPointer); 
             if (ParsePointer != NULL) fclose(ParsePointer); 
-            printf("%p\n", DataStructurePointer);
-            while (DataStructurePointer!=NULL)
+            
+            
+           while (DataStructurePointer!=NULL)
             {
                 p1=DataStructurePointer->next;
                 free(DataStructurePointer);
@@ -637,7 +653,6 @@ int main(void)
                 free(StringStructurePointer);
                 StringStructurePointer=p3;
             }
-            
             break; 
         } else if (CalledFunction=='n')
         {
