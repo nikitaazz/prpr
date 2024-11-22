@@ -305,8 +305,9 @@ void print(struct DataStructure *zac){
     if(zac == NULL){
         return;
     }
-    zac=zac->next;
+    printf("Z");
     printf("%d\n", zac->DataFirstValue);
+    zac=zac->next;
     print(zac);
 }
 
@@ -381,6 +382,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
                 sscanf(token, "%2d%2d", &ParseStructure1->Hours, &ParseStructure1->Minutes);
             }else if (whileCount==4)
             {
+                printf("Z");
                 strcpy(ParseStructure1->Comment,token);
             }
             token = strtok(NULL,"#");
@@ -389,6 +391,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         akt_p = akt_p->next;
     
         i++;
+        printf("Z");
     }
     i=0;
     while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && i < numElements)
@@ -602,13 +605,13 @@ int main(void)
     FILE **DataPointer1 = &DataPointer;
     FILE **ParsePointer1 = &ParsePointer;
     FILE **StringPointer1 = &StringPointer;
-    struct DataStructure *DataStructurePointer = (struct DataStructure*)malloc(sizeof(struct DataStructure));
+    struct DataStructure *DataStructurePointer = NULL;
     struct DataStructure *p1 = NULL;
-    struct ParseStructure *ParseStructurePointer = (struct ParseStructure*)malloc(sizeof(struct ParseStructure));
+    struct ParseStructure *ParseStructurePointer = NULL;
     struct ParseStructure *p2 = NULL;
-    struct StringStructure *StringStructurePointer = (struct StringStructure*)malloc(sizeof(struct StringStructure));
+    struct StringStructure *StringStructurePointer = NULL;
     struct StringStructure *p3 = NULL;
-    char CalledFunction;
+    char CalledFunction = 'p';
     int largestDataIndex = 0, largestParseIndex = 0,largestStringIndex = 0;
     int *pLargestDataIndex = &largestDataIndex, *pLargestParseIndex = &largestParseIndex, *pLargestStringIndex = &largestStringIndex;
     char **DataTxtLions = NULL;
@@ -616,6 +619,9 @@ int main(void)
     char **StringTxtLions = NULL;
     int numElements=0;
     int *p_numElements = &numElements;
+    DataStructurePointer = (struct DataStructure*)malloc(sizeof(struct DataStructure));
+    ParseStructurePointer = (struct ParseStructure*)malloc(sizeof(struct ParseStructure));
+    StringStructurePointer = (struct StringStructure*)malloc(sizeof(struct StringStructure));
     DataStructurePointer->next = NULL;
     StringStructurePointer->next = NULL;
     ParseStructurePointer->next = NULL;
@@ -628,14 +634,19 @@ int main(void)
         } else if (CalledFunction=='h')
         {
             h(StringPointer1);
-        } else if (CalledFunction == 'k') { 
-            print(DataStructurePointer);
-            if (DataPointer != NULL) fclose(DataPointer); 
-            if (StringPointer != NULL) fclose(StringPointer); 
-            if (ParsePointer != NULL) fclose(ParsePointer); 
+        } else if (CalledFunction == 'k') {
+            printf("Svo");
+            if (DataPointer != NULL){
+                fclose(DataPointer); 
+            } 
+            if (StringPointer != NULL){
+                fclose(StringPointer); 
+            }
+            if (ParsePointer != NULL){
+                fclose(ParsePointer); 
+            }
             
-            
-           while (DataStructurePointer!=NULL)
+            while (DataStructurePointer!=NULL)
             {
                 p1=DataStructurePointer->next;
                 free(DataStructurePointer);
