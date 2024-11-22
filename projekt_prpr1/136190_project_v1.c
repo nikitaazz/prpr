@@ -208,6 +208,19 @@ void v3(struct DataStructure *DataStructurePointer,struct ParseStructure *ParseS
         printf("V3: Nenaplnený spajany zoznam.\n");
         return;
     }
+    while (DataStructurePointer!=NULL && ParseStructurePointer!=NULL && StringStructurePointer!=NULL)
+    {
+        printf("ID. mer. modulu: %s",StringStructurePointer->ID);
+        printf("Hodnota 1: %d\n",DataStructurePointer->DataThirdValue);
+        printf("Hodnota 2: %g\n",DataStructurePointer->DataFourthValue);
+        printf("Poznámka ID: %s\n",ParseStructurePointer->ID[0] =='\0' ? "NAN" : ParseStructurePointer->ID);
+        printf("Poznámka C: %d : %d => %g\n",ParseStructurePointer->Hours,ParseStructurePointer->Minutes,ParseStructurePointer->FirstValue == 0 ? -1 : ParseStructurePointer->FirstValue);
+        printf("Poznámka T: %s\n\n", ParseStructurePointer->Comment[0] == '\0' ? "NAN" : ParseStructurePointer->Comment);
+        ParseStructurePointer=ParseStructurePointer->next;
+        DataStructurePointer=DataStructurePointer->next;
+        StringStructurePointer=StringStructurePointer->next;
+    }
+    
 }
 
 
@@ -302,64 +315,6 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
 }
 
 
-void print(struct DataStructure *zac){
-    if(zac == NULL){
-        return;
-    }
-    printf("%d\n", zac->DataFirstValue);
-    zac=zac->next;
-    print(zac);
-}
-
-
-
-    /*struct DataStructure *DataStructurePUse = DataStructurePointer;
-    struct ParseStructure *ParseStructurePUse = ParseStructurePointer;
-    struct StringStructure *StringStructurePUse = StringStructurePointer;
-
-    int whileCounter=0,i=0;
-    char buffer[256], *token;
-
-
-    if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
-    {
-        printf("M: Neotvoreny subor.\n");
-        return;
-    }
-
-    while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && i < numElements)
-    {
-        i=0;
-        whileCounter=0;
-        token=strtok(buffer," ");
-        printf("Zov\n");
-        while (token!=NULL)
-        {
-            printf("AZov");
-            whileCounter++;
-            if (whileCounter==1)
-            {
-                DataStructurePUse->DataFirstValue=atoi(token);
-            }else if (whileCounter==2)
-            {
-                DataStructurePUse->DataSecondValue=atoi(token);
-            }else if (whileCounter==3)
-            {
-                DataStructurePUse->DataThirdValue=atoi(token);
-            }else if (whileCounter==4)
-            {
-                DataStructurePUse->DataFourthValue=atof(token);
-            }
-            token=strtok(NULL," ");
-            DataStructurePUse->next=(struct DataStructure*)malloc(sizeof(struct DataStructure));
-            DataStructurePUse=DataStructurePUse->next;
-            i++;
-        }
-    }
-    printf("M: Nacitalo sa %d zaznamov.\n", i);*/
-
-
-
 void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
     struct ParseStructure *ParseStructure1 = ParseStructurePointer;
     struct DataStructure *DataStructure1 = DataStructurePointer;
@@ -409,7 +364,6 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
     {
         whileCount=0;
-        ParseStructure1=(struct ParseStructure*)malloc(sizeof(struct ParseStructure));
         token=strtok(buffer,"#");
         while (token!=NULL)
         {
@@ -682,8 +636,6 @@ int main(void)
         {
             h(StringPointer1);
         } else if (CalledFunction == 'k') {
-            print(DataStructurePointer);
-            printf("Svo");
             if (DataPointer != NULL){
                 fclose(DataPointer); 
             } 
@@ -693,25 +645,25 @@ int main(void)
             if (ParsePointer != NULL){
                 fclose(ParsePointer); 
             }
+
             
-            while (DataStructurePointer!=NULL)
-            {
-                p1=DataStructurePointer->next;
+            
+            while (DataStructurePointer != NULL) {
+                p1 = DataStructurePointer->next;
                 free(DataStructurePointer);
-                DataStructurePointer=p1;
+                DataStructurePointer = p1;
             }
-            while (ParseStructurePointer!=NULL)
-            {
-                p2=ParseStructurePointer->next;
+            while (ParseStructurePointer != NULL) {
+                p2 = ParseStructurePointer->next;
                 free(ParseStructurePointer);
-                ParseStructurePointer=p2;
+                ParseStructurePointer = p2;
             }
-            while (StringStructurePointer!=NULL)
-            {
-                p3=StringStructurePointer->next;
+            while (StringStructurePointer != NULL) {
+                p3 = StringStructurePointer->next;
                 free(StringStructurePointer);
-                StringStructurePointer=p3;
+                StringStructurePointer = p3;
             }
+
             break; 
         } else if (CalledFunction=='n')
         {
@@ -738,11 +690,6 @@ int main(void)
         {
             d();
         }*/
-        
-        
-        
-        
-        
     }
     return 0;
 }
