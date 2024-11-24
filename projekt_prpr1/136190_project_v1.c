@@ -59,7 +59,6 @@ int FindLargestElement(char **array, int size) {
 }
 
 
-
 int CountStrings(FILE *file) {
     int count = 0;
     char ch;
@@ -202,8 +201,8 @@ void v2(int numElements, char **DataTxtLions, char **ParseTxtLions, char **Strin
 }
 
 
-void v3(struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
-    if (DataStructurePointer==NULL || ParseStructurePointer==NULL || StringStructurePointer==NULL)
+void v3(struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){ 
+    if (DataStructurePointer->next==NULL || ParseStructurePointer->next==NULL || StringStructurePointer->next==NULL)
     {
         printf("V3: Nenaplnený spajany zoznam.\n");
         return;
@@ -213,14 +212,13 @@ void v3(struct DataStructure *DataStructurePointer,struct ParseStructure *ParseS
         printf("ID. mer. modulu: %s",StringStructurePointer->ID);
         printf("Hodnota 1: %d\n",DataStructurePointer->DataThirdValue);
         printf("Hodnota 2: %g\n",DataStructurePointer->DataFourthValue);
-        printf("Poznámka ID: %s\n",ParseStructurePointer->ID[0] =='\0' ? "NAN" : ParseStructurePointer->ID);
-        printf("Poznámka C: %d : %d => %g\n",ParseStructurePointer->Hours,ParseStructurePointer->Minutes,ParseStructurePointer->FirstValue == 0 ? -1 : ParseStructurePointer->FirstValue);
+        printf("Poznámka ID: %s\n",ParseStructurePointer->ID);   
+        printf("Poznámka C: %d : %d => %g\n",ParseStructurePointer->Hours,ParseStructurePointer->Minutes,ParseStructurePointer->FirstValue);
         printf("Poznámka T: %s\n\n", ParseStructurePointer->Comment[0] == '\0' ? "NAN" : ParseStructurePointer->Comment);
         ParseStructurePointer=ParseStructurePointer->next;
         DataStructurePointer=DataStructurePointer->next;
         StringStructurePointer=StringStructurePointer->next;
     }
-    
 }
 
 
@@ -319,9 +317,50 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     struct ParseStructure *ParseStructure1 = ParseStructurePointer;
     struct DataStructure *DataStructure1 = DataStructurePointer;
     struct StringStructure *StringStructure1 = StringStructurePointer;
+    struct DataStructure *p1 = NULL;
+    struct ParseStructure *p2 = NULL;
+    struct StringStructure *p3 = NULL;
+  
 
-    int i = 0, whileCounter = 0, whileCount=0;
+    int i = 0, whileCounter = 0,a=0,b=0;
     char buffer[1024], *token;
+
+    
+
+
+    while (DataStructurePointer->next != NULL) {
+        p1 = DataStructurePointer->next->next;
+        free(DataStructurePointer->next);
+        DataStructurePointer->next = p1;
+    }
+    while (ParseStructurePointer->next != NULL) {
+        p2 = ParseStructurePointer->next->next;
+        free(ParseStructurePointer->next);
+        ParseStructurePointer->next = p2;
+    }
+    while (StringStructurePointer->next != NULL) {
+        p3 = StringStructurePointer->next->next;
+        free(StringStructurePointer->next);
+        StringStructurePointer->next = p3;
+    }
+
+
+  
+
+ 
+    
+
+
+
+   
+
+  
+    
+    
+    fseek(*DataPointer1, 0, SEEK_SET);
+    fseek(*ParsePointer1, 0, SEEK_SET);
+    fseek(*StringPointer1, 0, SEEK_SET);
+    
 
     if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
     {
@@ -329,17 +368,24 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         return;
     }
 
+
+
+
     i=0;
     while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && i < numElements)
     {
+       
         whileCounter=0;
         token = strtok(buffer," ");
+        
         while (token!=NULL)
         {
             whileCounter++;
             if (whileCounter==1)
             {
+                
                 DataStructure1->DataFirstValue=atoi(token);
+               
             }else if (whileCounter==2)
             {
                 DataStructure1->DataSecondValue=atoi(token);
@@ -350,6 +396,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
             {
                 DataStructure1->DataFourthValue=atof(token);
             }
+            
             token = strtok(NULL," ");
         }
         if (i < numElements - 1) {
@@ -358,36 +405,52 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         }
         i++;
     }
+
+     
     DataStructure1->next = NULL;
+ 
 
     i=0;
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
     {
-        whileCount=0;
+      
         token=strtok(buffer,"#");
-        while (token!=NULL)
-        {
-            whileCount++;
-            if (whileCount==1)
-            {
-                strcpy(ParseStructure1->ID,token);
-            }else if (whileCount==2)
-            {
-                ParseStructure1->FirstValue=atof(token);
-            }else if (whileCount==3)
-            {
-                sscanf(token, "%2d%2d", &ParseStructure1->Hours, &ParseStructure1->Minutes);
-            }else if (whileCount==4)
-            {
-                strcpy(ParseStructure1->Comment,token);
-            }
+        if (token[0] == '\n') {
+            strcpy(ParseStructure1->ID, "NAN");
+            token = strtok(NULL,"#");
+        } else {
+            strcpy(ParseStructure1->ID, token);
             token = strtok(NULL,"#");
         }
-        if (i < numElements - 1) {
-            ParseStructure1->next = (struct ParseStructure*)malloc(sizeof(struct ParseStructure));
-            ParseStructure1 = ParseStructure1->next;
+        if (token == NULL) {
+            ParseStructure1->FirstValue=-1;
+            token = strtok(NULL,"#");
+        } else {
+            ParseStructure1->FirstValue=atof(token);
+            token = strtok(NULL,"#");
         }
+        if (token == NULL){
+            ParseStructure1->Hours = -1;
+            ParseStructure1->Minutes = -1;
+            token = strtok(NULL,"#");
+        }else{
+            sscanf(token, "%2d%2d", &a, &b);
+            ParseStructure1->Hours = a;
+            ParseStructure1->Minutes = b;
+            token = strtok(NULL,"#");
+        }
+        if (token == NULL) {
+            strcpy(ParseStructure1->Comment, "NAN");
+            token = strtok(NULL,"#");
+        } else {
+            strcpy(ParseStructure1->Comment, token);
+            token = strtok(NULL,"#");
+        }
+ 
+        ParseStructure1->next = (struct ParseStructure*)malloc(sizeof(struct ParseStructure));
+        ParseStructure1 = ParseStructure1->next;
         i++;
+   
     }
     ParseStructure1->next=NULL;
     
@@ -404,6 +467,11 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     }
     StringStructure1->next=NULL;
     printf("M: Nacitalo sa %d zaznamov.\n", i);
+    fseek(*DataPointer1, 0, SEEK_SET);
+    fseek(*ParsePointer1, 0, SEEK_SET);
+    fseek(*StringPointer1, 0, SEEK_SET);
+
+   
 
 }
 
