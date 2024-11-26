@@ -33,14 +33,6 @@ struct StringStructure
 
 
 
-char *my_strdup(const char *str) {
-    char *dup = malloc(strlen(str) + 1);
-    if (dup) {
-        strcpy(dup, str);
-    }
-    return dup;
-}
-
 int FindLargestElement(char **array, int size) {
     int i = 1;
     int maxIndex = 0;
@@ -86,7 +78,6 @@ int countElements(char **array) {
     }
     return count;
 }
-
 
 
 void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_numElements) {
@@ -168,10 +159,6 @@ void v2(int numElements, char **DataTxtLions, char **ParseTxtLions, char **Strin
 
     while (Counter < numElements) {
         char *dataLineCopy = (char *)malloc(strlen(DataTxtLions[Counter]) + 1);
-        if (dataLineCopy == NULL) {
-            printf("Memory allocation error\n");
-            return;
-        }
         strcpy(dataLineCopy, DataTxtLions[Counter]);
 
         token = strtok(dataLineCopy, " ");
@@ -189,10 +176,10 @@ void v2(int numElements, char **DataTxtLions, char **ParseTxtLions, char **Strin
             token = strtok(NULL, " ");
         }
 
-        printf("ID. mer. modulu: %s\n", StringTxtLions[Counter]);
+        printf("ID. mer. modulu: %s", StringTxtLions[Counter]);
         printf("Hodnota 1: %d\n", (int)hodnota1);
         printf("Hodnota 2: %g\n", hodnota2);
-        printf("Poznámka: %s\n", ParseTxtLions[Counter]);
+        printf("Poznámka: %s", ParseTxtLions[Counter]);
         printf("\n");
 
         free(dataLineCopy);
@@ -226,7 +213,6 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
 
     int i = 0;
     char buffer[256];
-    int DataCounter = 0, StringCounter = 0, ParseCounter = 0;
 
     int CountStringsDataPointer = 0;
     int CountStringsParsePointer = 0;
@@ -266,41 +252,48 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     *ParseTxtLions = malloc(CountStringsParsePointer * sizeof(char *));
     *StringTxtLions = malloc(CountStringsStringPointer * sizeof(char *));
 
+    i=0;
+    while (i<CountStringsDataPointer)
+    {
+        (*DataTxtLions)[i] = malloc(256 * sizeof(char));
+        i++;
+    }
+
+    i=0;
+    while (i<CountStringsParsePointer)
+    {
+        (*ParseTxtLions)[i] = malloc(256 * sizeof(char));
+        i++;
+    }
+
+    i=0;
+    while (i<CountStringsStringPointer)
+    {
+        (*StringTxtLions)[i] = malloc(256 * sizeof(char));
+        i++;
+    }
+    
+
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
     fseek(*StringPointer1, 0, SEEK_SET);
 
-    while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && DataCounter < CountStringsDataPointer) {
-        for (i = 0; buffer[i] != '\0'; i++) {
-            if (buffer[i] == '\n') {
-                buffer[i] = '\0';
-                break;
-            }
-        }
-        (*DataTxtLions)[DataCounter] = my_strdup(buffer);
-        DataCounter++;
+    i=0;
+    while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && i < CountStringsDataPointer) {
+        strcpy((*DataTxtLions)[i],buffer);
+        i++;
     }
 
-    while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && ParseCounter < CountStringsParsePointer) {
-        for (i = 0; buffer[i] != '\0'; i++) {
-            if (buffer[i] == '\n') {
-                buffer[i] = '\0';
-                break;
-            }
-        }
-        (*ParseTxtLions)[ParseCounter] = my_strdup(buffer);
-        ParseCounter++;
+    i=0;
+    while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < CountStringsParsePointer) {
+        strcpy((*ParseTxtLions)[i],buffer);
+        i++;
     }
 
-    while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && StringCounter < CountStringsStringPointer) {
-        for (i = 0; buffer[i] != '\0'; i++) {
-            if (buffer[i] == '\n') {
-                buffer[i] = '\0';
-                break;
-            }
-        }
-        (*StringTxtLions)[StringCounter] = my_strdup(buffer);
-        StringCounter++;
+    i=0;
+    while (fgets(buffer, sizeof(buffer), *StringPointer1) != NULL && i < CountStringsStringPointer) {
+        strcpy((*StringTxtLions)[i],buffer);
+        i++;
     }
 
     *largestDataIndex = FindLargestElement(*DataTxtLions, CountStringsDataPointer);
@@ -321,12 +314,8 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     struct ParseStructure *p2 = NULL;
     struct StringStructure *p3 = NULL;
   
-
     int i = 0, whileCounter = 0,a=0,b=0;
     char buffer[1024], *token;
-
-    
-
 
     while (DataStructurePointer->next != NULL) {
         p1 = DataStructurePointer->next->next;
@@ -344,33 +333,14 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         StringStructurePointer->next = p3;
     }
 
-
-  
-
- 
-    
-
-
-
-   
-
-  
-    
-    
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
     fseek(*StringPointer1, 0, SEEK_SET);
-    
-
     if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
     {
         printf("M: Neotvoreny subor.\n");
         return;
     }
-
-
-
-
     i=0;
     while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && i < numElements)
     {
@@ -383,9 +353,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
             whileCounter++;
             if (whileCounter==1)
             {
-                
                 DataStructure1->DataFirstValue=atoi(token);
-               
             }else if (whileCounter==2)
             {
                 DataStructure1->DataSecondValue=atoi(token);
@@ -405,10 +373,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         }
         i++;
     }
-
-     
     DataStructure1->next = NULL;
- 
 
     i=0;
     while (fgets(buffer, sizeof(buffer), *ParsePointer1) != NULL && i < numElements)
@@ -450,7 +415,6 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         ParseStructure1->next = (struct ParseStructure*)malloc(sizeof(struct ParseStructure));
         ParseStructure1 = ParseStructure1->next;
         i++;
-   
     }
     ParseStructure1->next=NULL;
     
@@ -470,9 +434,6 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
     fseek(*StringPointer1, 0, SEEK_SET);
-
-   
-
 }
 
 
@@ -521,17 +482,20 @@ void h(FILE **StringPointer1){
 
 void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
     int YMain = 0, WhileCounter = 0, i = 0;
-
-    char **DataNewArray = malloc(*numElements+1 * sizeof(char *));
-    char **ParseNewArray = malloc(*numElements+1 * sizeof(char *));
-    char **StringNewArray = malloc(*numElements+1 * sizeof(char *));
+    char **DataNewArray = NULL;
+    char **ParseNewArray = NULL;
+    char **StringNewArray = NULL;
 
     if (*DataTxtLions == NULL || *ParseTxtLions == NULL || *StringTxtLions == NULL) {
         printf("Q: Polia nie su vytvorene.\n");
         return;
     }
 
-    for (i = 0; i < *numElements+1; i++) {
+    DataNewArray = malloc((*numElements+1) * sizeof(char *));
+    ParseNewArray = malloc((*numElements+1) * sizeof(char *));
+    StringNewArray = malloc((*numElements+1) * sizeof(char *));
+
+    for (i = 0; i < *numElements + 1; i++) {
         DataNewArray[i] = malloc(256 * sizeof(char));
         ParseNewArray[i] = malloc(256 * sizeof(char));
         StringNewArray[i] = malloc(256 * sizeof(char));
@@ -543,25 +507,37 @@ void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
     {
         YMain=*numElements-1;
     }
-    
 
     WhileCounter = 0;
     while (WhileCounter < *numElements + 1) {
         if (WhileCounter < YMain) {
+            printf("1-%dWhile-%dYmain\n",WhileCounter,YMain);
             strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter]);
             strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter]);
             strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter]);
         } else if (WhileCounter == YMain) {
+            printf("2-%dWhile-%dYmain\n",WhileCounter,YMain);
             scanf(" %[^\n]", StringNewArray[WhileCounter]);
             scanf(" %[^\n]", DataNewArray[WhileCounter]);
             scanf(" %[^\n]", ParseNewArray[WhileCounter]);
         } else {
+            printf("\n\n\n3-%dWhile-%dYmain\n",WhileCounter,YMain);
+            /*printf("%s",(*DataTxtLions)[WhileCounter - 1]);
+            printf("%s",(*ParseTxtLions)[WhileCounter - 1]);
+            printf("%s",(*StringTxtLions)[WhileCounter - 1]);
+            printf("%s",DataNewArray[WhileCounter]);
+            printf("%s",ParseNewArray[WhileCounter]);
+            printf("%s",StringNewArray[WhileCounter]);*/
             strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter - 1]);
             strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter - 1]);
             strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter - 1]);
+            printf("Z\n\n");
         }
+        printf("end of cycle\n");
         WhileCounter++;
     }
+    printf("\nV\n");
+
     for (i = 0; i < *numElements; i++) {
         free((*DataTxtLions)[i]);
         free((*ParseTxtLions)[i]);
@@ -575,6 +551,17 @@ void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
     *DataTxtLions = DataNewArray;
     *ParseTxtLions = ParseNewArray;
     *StringTxtLions = StringNewArray;
+
+    
+    for (i = 0; i < *numElements; i++) {
+        free((DataNewArray)[i]);
+        free((ParseNewArray)[i]);
+        free((StringNewArray)[i]);
+    }
+
+    free(DataNewArray);
+    free(ParseNewArray);
+    free(StringNewArray);
 
     (*numElements)++;
 }
@@ -598,6 +585,7 @@ void w(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
     }
     
     scanf(" %s", idToDelete);
+    strcat(idToDelete, "\n");
     
     
     for (i = 0; i < *numElements; i++) {
@@ -621,7 +609,6 @@ void w(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
     *DataTxtLions = DataNewArray;
     *ParseTxtLions = ParseNewArray;
     *StringTxtLions = StringNewArray;
-
     *numElements -= deletedCount;
 
     printf("W: Vymazalo sa : %d zaznamov !\n", deletedCount);
@@ -668,6 +655,7 @@ void e(char ***ParseTxtLions, int numElements) {
 
 int main(void)
 {
+    int i=0;
     FILE *DataPointer = NULL;
     FILE *ParsePointer = NULL;
     FILE *StringPointer = NULL;
@@ -714,7 +702,39 @@ int main(void)
                 fclose(ParsePointer); 
             }
 
-            
+            if (DataTxtLions != NULL) {
+                for (i = 0; i < numElements; i++) {
+                    if (DataTxtLions[i] != NULL) {
+                        free(DataTxtLions[i]);
+                        DataTxtLions[i] = NULL;
+                    }
+                }
+                free(DataTxtLions);
+                DataTxtLions = NULL;
+            }
+
+            if (ParseTxtLions != NULL) {
+                for (i = 0; i < numElements; i++) {
+                    if (ParseTxtLions[i] != NULL) {
+                        free(ParseTxtLions[i]);
+                        ParseTxtLions[i] = NULL;
+                    }
+                }
+                free(ParseTxtLions);
+                ParseTxtLions = NULL;
+            }
+
+            if (StringTxtLions != NULL) {
+                for (i = 0; i < numElements; i++) {
+                    if (StringTxtLions[i] != NULL) {
+                        free(StringTxtLions[i]);
+                        StringTxtLions[i] = NULL;
+                    }
+                }
+                free(StringTxtLions);
+                StringTxtLions = NULL;
+            }
+
             
             while (DataStructurePointer != NULL) {
                 p1 = DataStructurePointer->next;
@@ -731,7 +751,6 @@ int main(void)
                 free(StringStructurePointer);
                 StringStructurePointer = p3;
             }
-
             break; 
         } else if (CalledFunction=='n')
         {
