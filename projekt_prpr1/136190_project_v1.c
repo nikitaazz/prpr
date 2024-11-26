@@ -71,6 +71,7 @@ int CountStrings(FILE *file) {
     return count;
 }
 
+
 int countElements(char **array) {
     int count = 0;
     while (array[count] != NULL) {
