@@ -483,6 +483,51 @@ void h(FILE **StringPointer1){
 }
 
 
+void a(int *numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
+    struct DataStructure *DataNewStruct = NULL;
+    struct ParseStructure *ParseNewStruct = NULL;
+    struct StringStructure *StringNewStruct = NULL;
+    int whileCounter=0,YMain=0;
+
+
+    scanf("%d", &YMain);
+    YMain--;
+    if (YMain>*numElements)
+    {
+        YMain=*numElements;
+    }
+
+    whileCounter=0;
+    while (whileCounter<numElements+1)
+    {
+        if (whileCounter<YMain)
+        {
+            strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter]);
+            strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter]);
+            strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter]);
+        }else if (whileCounter==YMain)
+        {
+            scanf(" %[^\n]", a);
+            strcpy(StringNewArray[WhileCounter],strcat(a, "\n"));
+            scanf(" %[^\n]", b);
+            strcpy(DataNewArray[WhileCounter],strcat(b, "\n"));
+            scanf(" %[^\n]", c);
+            strcpy(ParseNewArray[WhileCounter],strcat(c, "\n"));
+        }else
+        {
+            strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter - 1]);
+            strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter - 1]);
+            strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter - 1]);
+        }
+        
+        
+        
+        whileCounter++;
+    }
+    
+}
+
+
 void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
     int YMain = 0, WhileCounter = 0, i = 0;
     char **DataNewArray = NULL;
@@ -751,10 +796,10 @@ int main(void)
         }else if (CalledFunction=='m')
         {
             m(DataPointer1, ParsePointer1, StringPointer1,numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
-        }/*else if (CalledFunction=='a')
+        }else if (CalledFunction=='a')
         {
-            a();
-        }else if (CalledFunction='s')
+            a(&numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
+        }/*else if (CalledFunction='s')
         {
             s();
         }else if (CalledFunction=='d')
