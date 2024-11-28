@@ -213,7 +213,7 @@ void v3(struct DataStructure *DataStructurePointer,struct ParseStructure *ParseS
 
 void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *largestDataIndex,int *largestParseIndex,int *largestStringIndex,char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions,int *numElements) {
 
-    int i = 0;
+    int i = 0,z=0;
     char buffer[256];
 
     int CountStringsDataPointer = 0;
@@ -225,31 +225,36 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
         return;
     }
 
-    CountStringsDataPointer = CountStrings(*DataPointer1);
-    CountStringsParsePointer = CountStrings(*ParsePointer1);
-    CountStringsStringPointer = CountStrings(*StringPointer1);
-    *numElements=CountStringsDataPointer;
-
     if (*DataTxtLions!=NULL) {
-        for (i = 0; i < CountStringsDataPointer; i++) {
+        printf("Zov1\n");
+        for (i = 0; i < *numElements; i++) {
+            printf("%d\n",i);
             free((*DataTxtLions)[i]);
         }
+        printf("Zov3\n");
         free(*DataTxtLions);
     }
 
     if (*ParseTxtLions!=NULL) {
-        for (i = 0; i < CountStringsParsePointer; i++) {
+        for (i = 0; i < *numElements; i++) {
             free((*ParseTxtLions)[i]);
         }
         free(*ParseTxtLions);
     }
 
+
     if (*StringTxtLions!=NULL) {
-        for (i = 0; i < CountStringsStringPointer; i++) {
+        for (i = 0; i < *numElements; i++) {
             free((*StringTxtLions)[i]);
         }
         free(*StringTxtLions);
     }
+
+    CountStringsDataPointer = CountStrings(*DataPointer1);
+    CountStringsParsePointer = CountStrings(*ParsePointer1);
+    CountStringsStringPointer = CountStrings(*StringPointer1);
+    printf("%d",*numElements);
+    *numElements=CountStringsDataPointer;
 
     *DataTxtLions = malloc(CountStringsDataPointer * sizeof(char *));
     *ParseTxtLions = malloc(CountStringsParsePointer * sizeof(char *));
@@ -262,6 +267,7 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
         i++;
     }
 
+    printf("X\n");
     i=0;
     while (i<CountStringsParsePointer)
     {
@@ -482,11 +488,12 @@ void h(FILE **StringPointer1){
     fseek(*StringPointer1, 0, SEEK_SET);
 }
 
-
+/*
 void a(int *numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
     struct DataStructure *DataNewStruct = NULL;
     struct ParseStructure *ParseNewStruct = NULL;
     struct StringStructure *StringNewStruct = NULL;
+    char DataBuffer[512],ParseBuffer[512];
     int whileCounter=0,YMain=0;
 
 
@@ -502,17 +509,14 @@ void a(int *numElements, struct DataStructure *DataStructurePointer,struct Parse
     {
         if (whileCounter<YMain)
         {
-            strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter]);
-            strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter]);
-            strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter]);
         }else if (whileCounter==YMain)
         {
             scanf(" %[^\n]", a);
-            strcpy(StringNewArray[WhileCounter],strcat(a, "\n"));
-            scanf(" %[^\n]", b);
-            strcpy(DataNewArray[WhileCounter],strcat(b, "\n"));
-            scanf(" %[^\n]", c);
-            strcpy(ParseNewArray[WhileCounter],strcat(c, "\n"));
+            strcpy(StringNewStruct->ID,strcat(a, "\n"));
+            scanf(" %[^\n]", DataBuffer);
+            strcpy(DataBuffer,strcat(ParseBuffer, "\n"));
+            scanf(" %[^\n]", ParseBuffer);
+            strcpy(ParseBuffer,strcat(ParseBuffer, "\n"));
         }else
         {
             strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter - 1]);
@@ -525,7 +529,7 @@ void a(int *numElements, struct DataStructure *DataStructurePointer,struct Parse
         whileCounter++;
     }
     
-}
+}*/
 
 
 void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
@@ -624,6 +628,10 @@ void w(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
             free((*DataTxtLions)[i]);
             free((*ParseTxtLions)[i]);
             free((*StringTxtLions)[i]);
+            (*DataTxtLions)[i]=NULL;
+            (*ParseTxtLions)[i]=NULL;
+            (*StringTxtLions)[i]=NULL;
+
         } else {
             DataNewArray[newArrayIndex] = (*DataTxtLions)[i];
             ParseNewArray[newArrayIndex] = (*ParseTxtLions)[i];
@@ -798,7 +806,7 @@ int main(void)
             m(DataPointer1, ParsePointer1, StringPointer1,numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
         }else if (CalledFunction=='a')
         {
-            a(&numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
+            /*a(&numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);*/
         }/*else if (CalledFunction='s')
         {
             s();
