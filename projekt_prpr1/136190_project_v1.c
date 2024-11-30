@@ -81,7 +81,7 @@ int countElements(char **array) {
 }
 
 
-void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_numElements) {
+void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_numElements, int *numElements_PZ) {
     char *StringValues, *CombainedValues;
     char *token, buffer[256];
     int WhileCounter = 0;
@@ -116,6 +116,7 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_n
         }
     }    
     *p_numElements=CountStrings(*DataPointer1);
+    *numElements_PZ=*p_numElements;
     fseek(*StringPointer1, 0, SEEK_SET);
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
@@ -213,7 +214,7 @@ void v3(struct DataStructure *DataStructurePointer,struct ParseStructure *ParseS
 
 void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *largestDataIndex,int *largestParseIndex,int *largestStringIndex,char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions,int *numElements) {
 
-    int i = 0,z=0;
+    int i = 0;
     char buffer[256];
 
     int CountStringsDataPointer = 0;
@@ -226,12 +227,9 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     }
 
     if (*DataTxtLions!=NULL) {
-        printf("Zov1\n");
         for (i = 0; i < *numElements; i++) {
-            printf("%d\n",i);
             free((*DataTxtLions)[i]);
         }
-        printf("Zov3\n");
         free(*DataTxtLions);
     }
 
@@ -253,7 +251,6 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
     CountStringsDataPointer = CountStrings(*DataPointer1);
     CountStringsParsePointer = CountStrings(*ParsePointer1);
     CountStringsStringPointer = CountStrings(*StringPointer1);
-    printf("%d",*numElements);
     *numElements=CountStringsDataPointer;
 
     *DataTxtLions = malloc(CountStringsDataPointer * sizeof(char *));
@@ -267,7 +264,6 @@ void n(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1,int *lar
         i++;
     }
 
-    printf("X\n");
     i=0;
     while (i<CountStringsParsePointer)
     {
@@ -342,6 +338,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
         StringStructurePointer->next = p3;
     }
 
+
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
     fseek(*StringPointer1, 0, SEEK_SET);
@@ -390,7 +387,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
       
         token=strtok(buffer,"#");
         if (token[0] == '\n') {
-            strcpy(ParseStructure1->ID, "NAN");
+            strcpy(ParseStructure1->ID, "NaN");
             token = strtok(NULL,"#");
         } else {
             strcpy(ParseStructure1->ID, token);
@@ -414,7 +411,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int num
             token = strtok(NULL,"#");
         }
         if (token == NULL) {
-            strcpy(ParseStructure1->Comment, "NAN");
+            strcpy(ParseStructure1->Comment, "NaN");
             token = strtok(NULL,"#");
         } else {
             strcpy(ParseStructure1->Comment, token);
@@ -488,48 +485,86 @@ void h(FILE **StringPointer1){
     fseek(*StringPointer1, 0, SEEK_SET);
 }
 
-/*
-void a(int *numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
+
+void a(int *numElements, struct DataStructure *DataStructurePointer, struct ParseStructure *ParseStructurePointer, struct StringStructure *StringStructurePointer) {
     struct DataStructure *DataNewStruct = NULL;
     struct ParseStructure *ParseNewStruct = NULL;
     struct StringStructure *StringNewStruct = NULL;
-    char DataBuffer[512],ParseBuffer[512];
-    int whileCounter=0,YMain=0;
+    char a[512], b[512], c[512], *token;
+    int Hours = 0, Minutes = 0, YMain = 0, whileCount = 0;
 
+    DataNewStruct = (struct DataStructure *)malloc(sizeof(struct DataStructure));
+    ParseNewStruct = (struct ParseStructure *)malloc(sizeof(struct ParseStructure));
+    StringNewStruct = (struct StringStructure *)malloc(sizeof(struct StringStructure));
 
     scanf("%d", &YMain);
     YMain--;
-    if (YMain>*numElements)
-    {
-        YMain=*numElements;
+    if (YMain >= *numElements) {
+        YMain = *numElements;
     }
 
-    whileCounter=0;
-    while (whileCounter<numElements+1)
+    scanf(" %[^\n]", a);
+    strcat(a, "\n");
+    scanf(" %[^\n]", b);
+    strcat(b, "\n");
+    scanf(" %[^\n]", c);
+
+    strcpy(StringNewStruct->ID, a);
+
+    token = strtok(b, " ");
+    whileCount = 0;
+    while (token != NULL) {
+        whileCount++;
+        if (whileCount == 1) DataNewStruct->DataFirstValue = atoi(token);
+        else if (whileCount == 2) DataNewStruct->DataSecondValue = atoi(token);
+        else if (whileCount == 3) DataNewStruct->DataThirdValue = atoi(token);
+        else if (whileCount == 4) DataNewStruct->DataFourthValue = atof(token);
+        token = strtok(NULL, " ");
+    }
+
+    token = strtok(c, "#");
+    strcpy(ParseNewStruct->ID, token ? token : "NaN");
+    token = strtok(NULL, "#");
+    ParseNewStruct->FirstValue = token ? atof(token) : -1;
+    token = strtok(NULL, "#");
+    if (token) {
+        sscanf(token, "%2d%2d", &Hours, &Minutes);
+        ParseNewStruct->Hours = Hours;
+        ParseNewStruct->Minutes = Minutes;
+    } else {
+        ParseNewStruct->Hours = -1;
+        ParseNewStruct->Minutes = -1;
+    }
+    token = strtok(NULL, "#");
+    if (token == NULL) {
+        strcpy(ParseNewStruct->Comment, "NaN");
+    } else {
+        strcpy(ParseNewStruct->Comment, token);
+    }
+    token = strtok(NULL,"#");
+    whileCount=0;
+
+    printf("%d - %d",YMain,whileCount);
+    while (whileCount<*numElements)
     {
-        if (whileCounter<YMain)
+        if (whileCount==YMain-1)
         {
-        }else if (whileCounter==YMain)
-        {
-            scanf(" %[^\n]", a);
-            strcpy(StringNewStruct->ID,strcat(a, "\n"));
-            scanf(" %[^\n]", DataBuffer);
-            strcpy(DataBuffer,strcat(ParseBuffer, "\n"));
-            scanf(" %[^\n]", ParseBuffer);
-            strcpy(ParseBuffer,strcat(ParseBuffer, "\n"));
+            DataNewStruct->next=DataStructurePointer->next;
+            DataStructurePointer->next=DataNewStruct;
+            ParseNewStruct->next=ParseStructurePointer->next;
+            ParseStructurePointer->next=ParseNewStruct;
+            StringNewStruct->next=StringStructurePointer->next;
+            StringStructurePointer->next=StringNewStruct;
         }else
         {
-            strcpy(DataNewArray[WhileCounter], (*DataTxtLions)[WhileCounter - 1]);
-            strcpy(ParseNewArray[WhileCounter], (*ParseTxtLions)[WhileCounter - 1]);
-            strcpy(StringNewArray[WhileCounter], (*StringTxtLions)[WhileCounter - 1]);
+            DataStructurePointer = DataStructurePointer->next;
+            ParseStructurePointer = ParseStructurePointer->next;
+            StringStructurePointer = StringStructurePointer->next;
         }
-        
-        
-        
-        whileCounter++;
+        whileCount++;
     }
-    
-}*/
+    *numElements+=1;
+}
 
 
 void q(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***StringTxtLions) {
@@ -653,12 +688,12 @@ void w(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
 }
 
 
-void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions, int numElements, int *p_numElements,struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer) {
+void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***DataTxtLions,char ***ParseTxtLions,char ***StringTxtLions, int numElements, int *p_numElements,struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer,int *numElements_PZ) {
     int NumberOfFunction;
     scanf("%d",&NumberOfFunction);
     if (NumberOfFunction==1)
     {
-        v1(DataPointer1,ParsePointer1,StringPointer1,p_numElements);
+        v1(DataPointer1,ParsePointer1,StringPointer1,p_numElements,numElements_PZ);
     }else if (NumberOfFunction==2)
     {
         v2(numElements, *DataTxtLions, *ParseTxtLions, *StringTxtLions);
@@ -684,7 +719,7 @@ void e(char ***ParseTxtLions, int numElements) {
     
     for (i = 0; i < numElements; i++) {
         if (strstr((*ParseTxtLions)[i], ExploreString) != NULL) {
-            printf("%s\n", (*ParseTxtLions)[i]);
+            printf("%s", (*ParseTxtLions)[i]);
         }
     }
 }
@@ -712,8 +747,9 @@ int main(void)
     char **DataTxtLions = NULL;
     char **ParseTxtLions = NULL;
     char **StringTxtLions = NULL;
-    int numElements=0;
+    int numElements=0,numElementsP=0;
     int *p_numElements = &numElements;
+    int *numElements_PZ = &numElementsP;
     DataStructurePointer = (struct DataStructure*)malloc(sizeof(struct DataStructure));
     ParseStructurePointer = (struct ParseStructure*)malloc(sizeof(struct ParseStructure));
     StringStructurePointer = (struct StringStructure*)malloc(sizeof(struct StringStructure));
@@ -725,7 +761,7 @@ int main(void)
         scanf("%c",&CalledFunction);
         if (CalledFunction=='v')
         {
-            v(DataPointer1, ParsePointer1, StringPointer1, &DataTxtLions, &ParseTxtLions, &StringTxtLions,numElements,p_numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
+            v(DataPointer1, ParsePointer1, StringPointer1, &DataTxtLions, &ParseTxtLions, &StringTxtLions,numElements,p_numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer,numElements_PZ);
         } else if (CalledFunction=='h')
         {
             h(StringPointer1);
@@ -803,10 +839,10 @@ int main(void)
             e(&ParseTxtLions,numElements);
         }else if (CalledFunction=='m')
         {
-            m(DataPointer1, ParsePointer1, StringPointer1,numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
+            m(DataPointer1, ParsePointer1, StringPointer1,numElementsP,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
         }else if (CalledFunction=='a')
         {
-            /*a(&numElements,DataStructurePointer,ParseStructurePointer,StringStructurePointer);*/
+            a(&numElementsP,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
         }/*else if (CalledFunction='s')
         {
             s();
