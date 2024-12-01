@@ -500,7 +500,6 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
     struct ParseStructure *ParseTempNext;
     struct StringStructure *StringTempNext;
 
-    /* Initialize variables */
     DataPreviousElem1 = DataPreviousElem2 = DataCurrentElem1 = DataCurrentElem2 = NULL;
     ParsePreviousElem1 = ParsePreviousElem2 = ParseCurrentElem1 = ParseCurrentElem2 = NULL;
     StringPreviousElem1 = StringPreviousElem2 = StringCurrentElem1 = StringCurrentElem2 = NULL;
@@ -513,7 +512,6 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
     scanf("%d", &SecondIndex);
 
     if (FirstIndex < 1 || FirstIndex > *numElements || SecondIndex < 1 || SecondIndex > *numElements || FirstIndex == SecondIndex) {
-        printf("Invalid indices for swap.\n");
         return;
     } else {
         if (FirstIndex > SecondIndex) {
@@ -549,11 +547,6 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
             WhileCounter++;
         }
 
-        if (DataCurrentElem1 == NULL || DataCurrentElem2 == NULL) {
-            printf("Swap not performed due to invalid indices.\n");
-            return;
-        }
-
         if (DataCurrentElem1->next == DataCurrentElem2) {
             if (DataPreviousElem1 != NULL) {
                 DataPreviousElem1->next = DataCurrentElem2;
@@ -587,7 +580,6 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
             } else {
                 *DataStartPointer = DataCurrentElem2;
             }
-
             if (DataPreviousElem2 != NULL) {
                 DataPreviousElem2->next = DataCurrentElem1;
             } else {
@@ -630,8 +622,6 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
             StringCurrentElem2->next = StringCurrentElem1->next;
             StringCurrentElem1->next = StringTempNext;
         }
-
-        printf("Swap completed between positions %d and %d.\n", FirstIndex, SecondIndex);
     }
 }
 
