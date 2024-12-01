@@ -492,7 +492,22 @@ void h(FILE **StringPointer1){
 
 void d(int *numElements, struct DataStructure *DataStructurePointer, struct ParseStructure *ParseStructurePointer, struct StringStructure *StringStructurePointer, struct DataStructure **DataStartPointer, struct ParseStructure **ParseStartPointer, struct StringStructure **StringStartPointer) {
     int FirstIndex, SecondIndex;
-    int WhileCounter = 1;
+    int WhileCounter;
+    struct DataStructure *DataPreviousElem1, *DataPreviousElem2, *DataCurrentElem1, *DataCurrentElem2, *DataIterator;
+    struct ParseStructure *ParsePreviousElem1, *ParsePreviousElem2, *ParseCurrentElem1, *ParseCurrentElem2, *ParseIterator;
+    struct StringStructure *StringPreviousElem1, *StringPreviousElem2, *StringCurrentElem1, *StringCurrentElem2, *StringIterator;
+    struct DataStructure *DataTempNext;
+    struct ParseStructure *ParseTempNext;
+    struct StringStructure *StringTempNext;
+
+    /* Initialize variables */
+    DataPreviousElem1 = DataPreviousElem2 = DataCurrentElem1 = DataCurrentElem2 = NULL;
+    ParsePreviousElem1 = ParsePreviousElem2 = ParseCurrentElem1 = ParseCurrentElem2 = NULL;
+    StringPreviousElem1 = StringPreviousElem2 = StringCurrentElem1 = StringCurrentElem2 = NULL;
+    DataIterator = DataStructurePointer;
+    ParseIterator = ParseStructurePointer;
+    StringIterator = StringStructurePointer;
+    WhileCounter = 1;
 
     scanf("%d", &FirstIndex);
     scanf("%d", &SecondIndex);
@@ -501,14 +516,6 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
         printf("Invalid indices for swap.\n");
         return;
     } else {
-        struct DataStructure *DataPreviousElem1 = NULL, *DataPreviousElem2 = NULL, *DataCurrentElem1 = NULL, *DataCurrentElem2 = NULL;
-        struct ParseStructure *ParsePreviousElem1 = NULL, *ParsePreviousElem2 = NULL, *ParseCurrentElem1 = NULL, *ParseCurrentElem2 = NULL;
-        struct StringStructure *StringPreviousElem1 = NULL, *StringPreviousElem2 = NULL, *StringCurrentElem1 = NULL, *StringCurrentElem2 = NULL;
-
-        struct DataStructure *DataIterator = DataStructurePointer;
-        struct ParseStructure *ParseIterator = ParseStructurePointer;
-        struct StringStructure *StringIterator = StringStructurePointer;
-
         if (FirstIndex > SecondIndex) {
             int TemporaryIndex = FirstIndex;
             FirstIndex = SecondIndex;
@@ -539,7 +546,7 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
             DataIterator = DataIterator->next;
             ParseIterator = ParseIterator->next;
             StringIterator = StringIterator->next;
-            WhileCounter = WhileCounter + 1;
+            WhileCounter++;
         }
 
         if (DataCurrentElem1 == NULL || DataCurrentElem2 == NULL) {
@@ -587,7 +594,7 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
                 *DataStartPointer = DataCurrentElem1;
             }
 
-            struct DataStructure *DataTempNext = DataCurrentElem2->next;
+            DataTempNext = DataCurrentElem2->next;
             DataCurrentElem2->next = DataCurrentElem1->next;
             DataCurrentElem1->next = DataTempNext;
 
@@ -603,7 +610,7 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
                 *ParseStartPointer = ParseCurrentElem1;
             }
 
-            struct ParseStructure *ParseTempNext = ParseCurrentElem2->next;
+            ParseTempNext = ParseCurrentElem2->next;
             ParseCurrentElem2->next = ParseCurrentElem1->next;
             ParseCurrentElem1->next = ParseTempNext;
 
@@ -619,7 +626,7 @@ void d(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
                 *StringStartPointer = StringCurrentElem1;
             }
 
-            struct StringStructure *StringTempNext = StringCurrentElem2->next;
+            StringTempNext = StringCurrentElem2->next;
             StringCurrentElem2->next = StringCurrentElem1->next;
             StringCurrentElem1->next = StringTempNext;
         }
