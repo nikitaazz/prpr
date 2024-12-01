@@ -901,7 +901,7 @@ void s(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
 
     *numElements -= deletedCount;
 
-    printf("S: Vymazalo sa: %d zaznamov!\n", deletedCount);
+    printf("S: Vymazalo sa : %d zaznamov !\n", deletedCount);
 }
 
 
@@ -1066,10 +1066,10 @@ int main(void)
         }else if (CalledFunction=='s')
         {
             s(&numElementsP,DataStructurePointer,ParseStructurePointer,StringStructurePointer,p1D,p2P,p3S);
-        }/*else if (CalledFunction=='d')
+        }else if (CalledFunction=='d')
         {
-            d();
-        }*/
+            d(&numElementsP,DataStructurePointer,ParseStructurePointer,StringStructurePointer,p1D,p2P,p3S);
+        }
     }
     return 0;
 }
