@@ -340,6 +340,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int *nu
         StringStructurePointer->next = p3;
     }
 
+    *numElements=CountStrings(*DataPointer1);
 
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
@@ -486,6 +487,145 @@ void h(FILE **StringPointer1){
         }
     }
     fseek(*StringPointer1, 0, SEEK_SET);
+}
+
+
+void d(int *numElements, struct DataStructure *DataStructurePointer, struct ParseStructure *ParseStructurePointer, struct StringStructure *StringStructurePointer, struct DataStructure **DataStartPointer, struct ParseStructure **ParseStartPointer, struct StringStructure **StringStartPointer) {
+    int FirstIndex, SecondIndex;
+    int WhileCounter = 1;
+
+    scanf("%d", &FirstIndex);
+    scanf("%d", &SecondIndex);
+
+    if (FirstIndex < 1 || FirstIndex > *numElements || SecondIndex < 1 || SecondIndex > *numElements || FirstIndex == SecondIndex) {
+        printf("Invalid indices for swap.\n");
+        return;
+    } else {
+        struct DataStructure *DataPreviousElem1 = NULL, *DataPreviousElem2 = NULL, *DataCurrentElem1 = NULL, *DataCurrentElem2 = NULL;
+        struct ParseStructure *ParsePreviousElem1 = NULL, *ParsePreviousElem2 = NULL, *ParseCurrentElem1 = NULL, *ParseCurrentElem2 = NULL;
+        struct StringStructure *StringPreviousElem1 = NULL, *StringPreviousElem2 = NULL, *StringCurrentElem1 = NULL, *StringCurrentElem2 = NULL;
+
+        struct DataStructure *DataIterator = DataStructurePointer;
+        struct ParseStructure *ParseIterator = ParseStructurePointer;
+        struct StringStructure *StringIterator = StringStructurePointer;
+
+        if (FirstIndex > SecondIndex) {
+            int TemporaryIndex = FirstIndex;
+            FirstIndex = SecondIndex;
+            SecondIndex = TemporaryIndex;
+        }
+
+        while (WhileCounter <= SecondIndex) {
+            if (WhileCounter == FirstIndex - 1) {
+                DataPreviousElem1 = DataIterator;
+                ParsePreviousElem1 = ParseIterator;
+                StringPreviousElem1 = StringIterator;
+            }
+            if (WhileCounter == FirstIndex) {
+                DataCurrentElem1 = DataIterator;
+                ParseCurrentElem1 = ParseIterator;
+                StringCurrentElem1 = StringIterator;
+            }
+            if (WhileCounter == SecondIndex - 1) {
+                DataPreviousElem2 = DataIterator;
+                ParsePreviousElem2 = ParseIterator;
+                StringPreviousElem2 = StringIterator;
+            }
+            if (WhileCounter == SecondIndex) {
+                DataCurrentElem2 = DataIterator;
+                ParseCurrentElem2 = ParseIterator;
+                StringCurrentElem2 = StringIterator;
+            }
+            DataIterator = DataIterator->next;
+            ParseIterator = ParseIterator->next;
+            StringIterator = StringIterator->next;
+            WhileCounter = WhileCounter + 1;
+        }
+
+        if (DataCurrentElem1 == NULL || DataCurrentElem2 == NULL) {
+            printf("Swap not performed due to invalid indices.\n");
+            return;
+        }
+
+        if (DataCurrentElem1->next == DataCurrentElem2) {
+            if (DataPreviousElem1 != NULL) {
+                DataPreviousElem1->next = DataCurrentElem2;
+            } else {
+                *DataStartPointer = DataCurrentElem2;
+            }
+
+            DataCurrentElem1->next = DataCurrentElem2->next;
+            DataCurrentElem2->next = DataCurrentElem1;
+
+            if (ParsePreviousElem1 != NULL) {
+                ParsePreviousElem1->next = ParseCurrentElem2;
+            } else {
+                *ParseStartPointer = ParseCurrentElem2;
+            }
+
+            ParseCurrentElem1->next = ParseCurrentElem2->next;
+            ParseCurrentElem2->next = ParseCurrentElem1;
+
+            if (StringPreviousElem1 != NULL) {
+                StringPreviousElem1->next = StringCurrentElem2;
+            } else {
+                *StringStartPointer = StringCurrentElem2;
+            }
+
+            StringCurrentElem1->next = StringCurrentElem2->next;
+            StringCurrentElem2->next = StringCurrentElem1;
+        } else {
+            if (DataPreviousElem1 != NULL) {
+                DataPreviousElem1->next = DataCurrentElem2;
+            } else {
+                *DataStartPointer = DataCurrentElem2;
+            }
+
+            if (DataPreviousElem2 != NULL) {
+                DataPreviousElem2->next = DataCurrentElem1;
+            } else {
+                *DataStartPointer = DataCurrentElem1;
+            }
+
+            struct DataStructure *DataTempNext = DataCurrentElem2->next;
+            DataCurrentElem2->next = DataCurrentElem1->next;
+            DataCurrentElem1->next = DataTempNext;
+
+            if (ParsePreviousElem1 != NULL) {
+                ParsePreviousElem1->next = ParseCurrentElem2;
+            } else {
+                *ParseStartPointer = ParseCurrentElem2;
+            }
+
+            if (ParsePreviousElem2 != NULL) {
+                ParsePreviousElem2->next = ParseCurrentElem1;
+            } else {
+                *ParseStartPointer = ParseCurrentElem1;
+            }
+
+            struct ParseStructure *ParseTempNext = ParseCurrentElem2->next;
+            ParseCurrentElem2->next = ParseCurrentElem1->next;
+            ParseCurrentElem1->next = ParseTempNext;
+
+            if (StringPreviousElem1 != NULL) {
+                StringPreviousElem1->next = StringCurrentElem2;
+            } else {
+                *StringStartPointer = StringCurrentElem2;
+            }
+
+            if (StringPreviousElem2 != NULL) {
+                StringPreviousElem2->next = StringCurrentElem1;
+            } else {
+                *StringStartPointer = StringCurrentElem1;
+            }
+
+            struct StringStructure *StringTempNext = StringCurrentElem2->next;
+            StringCurrentElem2->next = StringCurrentElem1->next;
+            StringCurrentElem1->next = StringTempNext;
+        }
+
+        printf("Swap completed between positions %d and %d.\n", FirstIndex, SecondIndex);
+    }
 }
 
 
@@ -704,52 +844,67 @@ void w(int *numElements, char ***DataTxtLions, char ***ParseTxtLions, char ***St
 }
 
 
-void s(int *numElements, struct DataStructure *DataStructurePointer,struct ParseStructure *ParseStructurePointer,struct StringStructure *StringStructurePointer){
+void s(int *numElements, struct DataStructure *DataStructurePointer, struct ParseStructure *ParseStructurePointer, struct StringStructure *StringStructurePointer,struct DataStructure **p1D, struct ParseStructure **p2P, struct StringStructure **p3S) {
     struct DataStructure *p1 = NULL;
     struct ParseStructure *p2 = NULL;
     struct StringStructure *p3 = NULL;
-    char String[512];
-    int whileCounter=0,i=0;
 
-    if (DataStructurePointer==NULL || ParseStructurePointer==NULL || StringStructurePointer==NULL)
-    {
-        printf("S: Spajany zoznam nie je vytvorený.");
+    char String[512];
+    int deletedCount = 0;
+
+    if (DataStructurePointer == NULL || ParseStructurePointer == NULL || StringStructurePointer == NULL) {
+        printf("S: Spajany zoznam nie je vytvorený.\n");
+        return;
     }
 
-    scanf("%s",String);
-    strcat(String,"\n");
+    scanf("%s", String);
+    strcat(String, "\n");
 
-    while (whileCounter<*numElements)
-    {
-        printf("count start%d\n",whileCounter );
-        printf("%s\n",StringStructurePointer->ID);
-        if (strcmp(StringStructurePointer->next->ID,String)==0)
+    while (StringStructurePointer != NULL) {
+        if (strcmp(String,StringStructurePointer->ID)==0)
         {
-        printf("z\n");
-            p1=DataStructurePointer->next;
-            p2=ParseStructurePointer->next;
-            p3=StringStructurePointer->next;
-            DataStructurePointer->next=DataStructurePointer->next->next;
-            ParseStructurePointer->next=ParseStructurePointer->next->next;
-            StringStructurePointer->next=StringStructurePointer->next->next;
+            p1 = DataStructurePointer;
+            p2 = ParseStructurePointer;
+            p3 = StringStructurePointer;
+
+            DataStructurePointer = DataStructurePointer->next;
+            ParseStructurePointer = ParseStructurePointer->next;
+            StringStructurePointer = StringStructurePointer->next;
+
+            *p1D = DataStructurePointer;
+            *p2P = ParseStructurePointer;
+            *p3S = StringStructurePointer;
+
             free(p1);
             free(p2);
             free(p3);
-            i++;
-        }else{
-            DataStructurePointer=DataStructurePointer->next;
-            ParseStructurePointer=ParseStructurePointer->next;
-            StringStructurePointer=StringStructurePointer->next;
+
+            deletedCount++;
+        }else if (StringStructurePointer->next != NULL && strcmp(StringStructurePointer->next->ID, String) == 0) {
+
+            p1 = DataStructurePointer->next;
+            p2 = ParseStructurePointer->next;
+            p3 = StringStructurePointer->next;
+
+            DataStructurePointer->next = p1->next;
+            ParseStructurePointer->next = p2->next;
+            StringStructurePointer->next = p3->next;
+
+            free(p1);
+            free(p2);
+            free(p3);
+
+            deletedCount++;
+        } else {
+            DataStructurePointer = DataStructurePointer->next;
+            ParseStructurePointer = ParseStructurePointer->next;
+            StringStructurePointer = StringStructurePointer->next;
         }
-
-
-        printf("count finish%d\n",whileCounter );
-        whileCounter++;
-
-
     }
-    printf("S: Vymazalo sa : %d zaznamov !\n",i);
-    *numElements=*numElements-i;
+
+    *numElements -= deletedCount;
+
+    printf("S: Vymazalo sa: %d zaznamov!\n", deletedCount);
 }
 
 
@@ -913,7 +1068,7 @@ int main(void)
             a(&numElementsP,DataStructurePointer,ParseStructurePointer,StringStructurePointer,p1D,p2P,p3S);
         }else if (CalledFunction=='s')
         {
-            s(&numElementsP,DataStructurePointer,ParseStructurePointer,StringStructurePointer);
+            s(&numElementsP,DataStructurePointer,ParseStructurePointer,StringStructurePointer,p1D,p2P,p3S);
         }/*else if (CalledFunction=='d')
         {
             d();
