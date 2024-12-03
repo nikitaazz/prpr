@@ -116,7 +116,6 @@ void v1(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1, int *p_n
         }
     }    
     *p_numElements=CountStrings(*DataPointer1);
-    *numElements_PZ=*p_numElements;
     fseek(*StringPointer1, 0, SEEK_SET);
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
@@ -324,6 +323,12 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int *nu
     int i = 0, whileCounter = 0,a=0,b=0;
     char buffer[1024], *token;
 
+    if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
+    {
+        printf("M: Neotvoreny subor.\n");
+        return;
+    }
+
     while (DataStructurePointer->next != NULL) {
         p1 = DataStructurePointer->next->next;
         free(DataStructurePointer->next);
@@ -345,11 +350,7 @@ void m(FILE **DataPointer1, FILE **ParsePointer1, FILE **StringPointer1, int *nu
     fseek(*DataPointer1, 0, SEEK_SET);
     fseek(*ParsePointer1, 0, SEEK_SET);
     fseek(*StringPointer1, 0, SEEK_SET);
-    if (*DataPointer1==NULL || *ParsePointer1 == NULL || *StringPointer1 == NULL)
-    {
-        printf("M: Neotvoreny subor.\n");
-        return;
-    }
+
     i=0;
     while (fgets(buffer, sizeof(buffer), *DataPointer1) != NULL && i < *numElements)
     {
@@ -849,7 +850,7 @@ void s(int *numElements, struct DataStructure *DataStructurePointer, struct Pars
     char String[512];
     int deletedCount = 0;
 
-    if (DataStructurePointer == NULL || ParseStructurePointer == NULL || StringStructurePointer == NULL) {
+    if (DataStructurePointer->next == NULL || ParseStructurePointer->next == NULL || StringStructurePointer->next == NULL) {
         printf("S: Spajany zoznam nie je vytvorený.\n");
         return;
     }
@@ -925,14 +926,20 @@ void v(FILE **DataPointer1,FILE **ParsePointer1,FILE **StringPointer1,  char ***
 
 void e(char ***ParseTxtLions, int numElements) {
     int i = 0;
-    char ExploreString[256];
+    char ExploreString[512];
+    int length;
 
     if (*ParseTxtLions == NULL) {
         printf("E: Polia nie su vytvorene.\n");
         return;
     }
-    
-    scanf("%s", ExploreString);
+    getchar();
+    fgets(ExploreString,512,stdin);
+
+    length = (int)strlen(ExploreString);
+    if (length > 0 && ExploreString[length - 1] == '\n') {
+        ExploreString[length - 1] = '\0';
+    }
     
     for (i = 0; i < numElements; i++) {
         if (strstr((*ParseTxtLions)[i], ExploreString) != NULL) {
@@ -940,7 +947,6 @@ void e(char ***ParseTxtLions, int numElements) {
         }
     }
 }
-
 
 
 int main(void)
